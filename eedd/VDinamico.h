@@ -44,6 +44,7 @@ class VDinamico {
         VDinamico& operator=(const VDinamico& original);
         T& operator[](int posicion);
         bool operator==(const VDinamico& original);
+
         /**
          * Metodo que inserta un nuevo dato en la posicion indicada. Si el tamaño logico es mayor o igual al fisico,
          * llama a la función aumentarTamVector(). Aumenta el tamaño logico en 1.
