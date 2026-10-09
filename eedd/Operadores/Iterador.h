@@ -2,7 +2,9 @@
 #define PRACTICACPP_ITERADOR_H
 
 #include "Nodo.h"
-#include "../ListaDEnlazada.h"
+
+template<class T>
+class ListaDEnlazada;
 
 template<class T>
 class Iterador {
@@ -13,12 +15,25 @@ public:
     /// Constructores: Parametrizado
     Iterador(Nodo<T> *nodo) {this->nodo = nodo;}
 
-    bool hayAnterior() { return nodo->anterior != 0; }
-    bool haySiguiente() { return nodo->siguiente != 0; }
-    void nodoIgualAnterior() { nodo = nodo->anterior; }
-    void nodoIgualSiguiente() { nodo = nodo->siguiente; }
+    bool hayAnterior() { return nodo->anterior != nullptr; }
+    bool haySiguiente() { return nodo->siguiente != nullptr; }
+    void aAnterior();
+    void aSiguiente();
     T &dato() { return nodo->dato; }
+
 };
+
+template<class T>
+void Iterador<T>::aAnterior() {
+    if (nodo != nullptr)
+        nodo = nodo->anterior;
+}
+
+template<class T>
+void Iterador<T>::aSiguiente() {
+    if (nodo != nullptr)
+        nodo = nodo->siguiente;
+}
 
 
 #endif //PRACTICACPP_ITERADOR_H

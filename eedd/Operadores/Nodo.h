@@ -3,7 +3,6 @@
 #define PRACTICACPP_NODO_H
 
 
-
 template<class T>
 class Nodo {
 public:
