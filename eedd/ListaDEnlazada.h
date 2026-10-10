@@ -40,6 +40,7 @@ public:
     void borrar(Iterador<T> &iterador);
 
     void concatena(const ListaDEnlazada &original) { this+original; }
+    T* buscarDato(T& dato);
 
 };
 
@@ -256,6 +257,17 @@ void ListaDEnlazada<T>::borraFinal() {
         cola = iterador.nodo;
     }
     --nElementos;
+}
+
+template<typename T>
+T* ListaDEnlazada<T>::buscarDato( T &dato) {
+    Iterador<T> iterador(this->cabecera);
+    while (iterador.haySiguiente()) {
+        if (iterador.dato() == dato)
+            return &iterador.dato();
+        iterador.aSiguiente();
+    }
+    return nullptr;
 }
 
 #endif //PRACTICACPP_LISTADENLAZADA_H

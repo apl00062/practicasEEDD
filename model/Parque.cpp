@@ -5,11 +5,11 @@
 #include "Parque.h"
 
 Parque::Parque() {
-    especies = VDinamico<Especie*>();
+    especies = VDinamico<Especie>();
 }
 
 
-Parque::Parque(int codigoParque, std::string nombreParque, VDinamico<Especie*> especies) {
+Parque::Parque(int codigoParque, std::string nombreParque, VDinamico<Especie> especies) {
     this->codigoParque = codigoParque;
     this->nombreParque = nombreParque;
     this->especies = especies;
@@ -33,7 +33,7 @@ int Parque::getCodigoParque() {
 }
 
 
-Especie* Parque::getEspecie(int posicion) {
+Especie Parque::getEspecie(int posicion) {
     return this->especies[posicion];
 }
 
@@ -53,14 +53,14 @@ void Parque::setNombreParque(std::string nombreParque) {
 }
 
 
-void Parque::insertarEspecie(Especie especie) {
-    especies.insertar(&especie);
+void Parque::insertarEspecie(const Especie& especie) {
+    especies.insertar(especie);
 }
 
 
 bool Parque::existeNombreComun(std::string nombreComun) {
     for (int i = 0; i < especies.getTamanioLogico(); ++i) {
-        if (especies[i]->getNombreComun() == nombreComun)
+        if (especies[i].getNombreComun() == nombreComun)
             return true;
     }
     return false;
@@ -69,8 +69,12 @@ bool Parque::existeNombreComun(std::string nombreComun) {
 
 bool Parque::existeNombreCientifico(std::string nombreCientifico) {
     for (int i = 0; i < especies.getTamanioLogico(); ++i) {
-        if (especies[i]->getNombreCientfico() == nombreCientifico)
+        if (especies[i].getNombreCientfico() == nombreCientifico)
             return true;
     }
     return false;
+}
+
+bool Parque::operator==(const Parque &original) const{
+    return this->codigoParque == original.codigoParque;
 }

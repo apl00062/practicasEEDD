@@ -13,12 +13,12 @@ class Parque {
     private:
         int codigoParque;
         std::string nombreParque;
-        VDinamico<Especie*> especies;
+        VDinamico<Especie> especies;
 
     public:
         // Constructores
         Parque();
-        Parque(int codigoParque, std::string nombreParque, VDinamico<Especie*> especies);
+        Parque(int codigoParque, std::string nombreParque, VDinamico<Especie> especies);
         Parque(const Parque& original);
 
         // Destructor
@@ -27,15 +27,17 @@ class Parque {
         // Getters
         int getCodigoParque();
         std::string getNombreParque();
-
-        Especie* getEspecie(int posicion);
+        Especie getEspecie(int posicion);
 
         // Setters
         void setCodigoParque(int codigoParque);
         void setNombreParque (std::string nombreParque);
 
+        // Operadores
+        bool operator==(const Parque &original) const;
+
         // Utilidades
-        void insertarEspecie(Especie especie);
+        void insertarEspecie(const Especie& especie);
         bool existeNombreComun(std::string nombreComun);
         bool existeNombreCientifico(std::string nombreCientifico);
 

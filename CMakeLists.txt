@@ -12,4 +12,6 @@ add_executable(PracticaCPP
         model/Parque.h
         eedd/Operadores/Nodo.h
         eedd/Operadores/Iterador.h
+        model/ControlParques.cpp
+        model/ControlParques.h
 )

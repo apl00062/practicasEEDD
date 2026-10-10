@@ -27,6 +27,11 @@ class VDinamico {
         */
         void aumentarTamVector(unsigned int tamLogico);
 
+        /**
+         * Metodo que llama a la función sort.
+        */
+        void ordenar();
+
     public:
         /// Constructores: Por defecto, Parametrizado, Copia y Copia parcial.
         VDinamico();
@@ -62,11 +67,6 @@ class VDinamico {
          *      Posicion en la que queremos borrar el dato, si no hay valor, se borrará el último dato.
         */
         void eliminar(unsigned int posicion = UINT_MAX);
-
-        /**
-         * Metodo que llama a la función sort.
-        */
-        void ordenar();
 
         /**
          * Busqueda binaria.
