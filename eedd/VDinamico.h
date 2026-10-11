@@ -3,6 +3,8 @@
 #ifndef PR1_VDINAMICO_H
 #define PR1_VDINAMICO_H
 
+#include <climits>
+
 template<typename T>
 class VDinamico {
         unsigned int tamLogico;
@@ -27,10 +29,6 @@ class VDinamico {
         */
         void aumentarTamVector(unsigned int tamLogico);
 
-        /**
-         * Metodo que llama a la función sort.
-        */
-        void ordenar();
 
     public:
         /// Constructores: Por defecto, Parametrizado, Copia y Copia parcial.
@@ -58,7 +56,7 @@ class VDinamico {
          * \param posicon
          *      Posicion en la que queremos insertar el dato, si no hay valor, lo insertará al final.
         */
-        void insertar(const T& dato, unsigned int posicon = UINT_MAX);
+        void insertar(const T& dato, unsigned int posicion = UINT_MAX);
 
         /**
          * Metodo que disminuye el tamaño lógico en 1, sabiendo que en la siguiente insercción el dato se sobreescribirá
@@ -67,6 +65,11 @@ class VDinamico {
          *      Posicion en la que queremos borrar el dato, si no hay valor, se borrará el último dato.
         */
         void eliminar(unsigned int posicion = UINT_MAX);
+
+        /**
+        * Metodo que llama a la función sort.
+        */
+        void ordenar();
 
         /**
          * Busqueda binaria.

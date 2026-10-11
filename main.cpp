@@ -5,10 +5,11 @@
 #include "eedd/VDinamico.h"
 #include "model/Especie.h"
 #include "io/LectorCSV.h"
-#include <string>
+#include "eedd/ListaDEnlazada.h"
 
 
 const std::string RUTA_FICHERO_ESPECIES = "data/arbolado-especies.csv";
+const std::string RUTA_FICHERO_PARQUES = "data/parques.csv";
 
 /**
  * @brief Función para encontrar las especies con nombre común no nulo
@@ -27,6 +28,59 @@ VDinamico<Especie*> getEspNComun(VDinamico<Especie>& vEspecies)
     return vectorEspNComun;
 }
 
+/// Operaciones para la prueba 1 de la Lista Doblemente Enlazada
+void insertarAlFinalLista(ListaDEnlazada<int> &enteros) {
+    for (int i = 101; i <= 200; ++i)
+        enteros.insertaFinal(i);
+}
+
+void insertarAlPrincipioLista(ListaDEnlazada<int> &enteros) {
+    for (int i = 98; i >= 1; --i)
+        enteros.insertaInicio(i);
+}
+
+void insertarDelanteLista(ListaDEnlazada<int> &enteros) {
+    Iterador<int> iterador = enteros.getIterador();
+    while (iterador.dato() != 101)
+        iterador.aSiguiente();
+
+    int aInsertar = 100;
+    enteros.insertar(iterador,aInsertar);
+}
+
+void insertarDetrasLista(ListaDEnlazada<int> &enteros) {
+    Iterador<int> iterador = enteros.getIterador();
+    while (iterador.dato() != 98)
+        iterador.aSiguiente();
+
+    int aInsertar = 99;
+    enteros.insertar(iterador, aInsertar);
+}
+
+void borrarPrimerosYUltimos(ListaDEnlazada<int> &enteros) {
+    for (int i = 0; i < 10; ++i) {
+        enteros.borraFinal();
+        enteros.borraInicio();
+    }
+}
+
+void borrarMultiplosDiez(ListaDEnlazada<int> &enteros) {
+    Iterador<int> iterador = enteros.getIterador();
+    while (iterador.haySiguiente()) {
+        if (iterador.dato()%10 == 0)
+            enteros.borrar(iterador);
+        else
+            iterador.aSiguiente();
+    }
+}
+
+void imprimirPorPantalla(ListaDEnlazada<int> &enteros) {
+    Iterador<int> iterador = enteros.getIterador();
+    while (iterador.haySiguiente()) {
+        std::cout << "Numero: " << iterador.dato() << std::endl;
+        iterador.aSiguiente();
+    }
+}
 
 int main()
 {
@@ -35,8 +89,9 @@ int main()
         //INSTANCIAR Y MOSTRAR EL VECTOR DE Especies
         LectorCSV lector_csv;
         VDinamico<Especie> vectorCompleto;
+        ListaDEnlazada<int> enteros;
         Especie especie;
-        if (!lector_csv.cargar(vectorCompleto, RUTA_FICHERO_ESPECIES))
+        if (!lector_csv.cargarVectorEspecie(vectorCompleto, RUTA_FICHERO_ESPECIES))
         {
             std::cerr << "Error: no se pudo abrir el fichero '" << RUTA_FICHERO_ESPECIES << "'.\n";
             std::cerr << "Comprueba que ejecutas el programa desde la raiz del proyecto "
@@ -47,15 +102,15 @@ int main()
 
         VDinamico<Especie*> vectorEspNComun = getEspNComun(vectorCompleto);
 
-        int practica1;
-        int menuPrincipal;
+        int practica1 = 0;
+        int practica2 = 0;
+        int menuPrincipal = 0;
 
-        while (menuPrincipal != 3) {
+        while (menuPrincipal < 3) {
             std::cout << "--- ELEIGE LA ENTREGA QUE QUIERES COMPROBAR: ---" << std::endl
                 << " 1. Practica 1." << std::endl
                 << " 2. Practica 2." << std::endl;
             std::cin >> menuPrincipal;
-
             switch (menuPrincipal) {
                 case(1):
                     while (practica1 != 5) {
@@ -121,18 +176,45 @@ int main()
                                 break;
 
                             case(5):
-                                break;;
+                                break;
                             }
                         }
                         break;
 
                     case(2):
-
+                        while (practica2 < 12) {
+                            std::cout << "--- Practica 2 ---" << std::endl
+                                << " 1. Prueba con Enteros. " << std::endl
+                                << " 2. " << std::endl;
+                            std::cin >> practica2;
+                            switch (practica2) {
+                                case(1): {
+                                    insertarAlFinalLista(enteros);
+                                    std::cout << " 1. Valores crecientes desde 101 a 200. " << std::endl;
+                                    imprimirPorPantalla(enteros);
+                                    insertarAlPrincipioLista(enteros);
+                                    std::cout << " 2. Decrecientes desde 98 a 1. " << std::endl;
+                                    imprimirPorPantalla(enteros);
+                                    insertarDelanteLista(enteros);
+                                    std::cout << " 3. Insertar el dato 100 delante del 101. " << std::endl;
+                                    imprimirPorPantalla(enteros);
+                                    insertarDetrasLista(enteros);
+                                    std::cout << " 4. Insertar el dato 99 detras del 98. " << std::endl;
+                                    imprimirPorPantalla(enteros);
+                                    borrarPrimerosYUltimos(enteros);
+                                    std::cout << " 5. Borrar los 10 primeros y los 10 ultimos. " << std::endl;
+                                    imprimirPorPantalla(enteros);
+                                    borrarMultiplosDiez(enteros);
+                                    std::cout << " 6. Borrar los multiplos de 10. " << std::endl;
+                                    imprimirPorPantalla(enteros);
+                                    break;
+                            }
+                        }
                         break;
 
                     case(3):
                         break;
-
+                    }
                 }
             }
     }

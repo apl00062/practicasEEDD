@@ -2,7 +2,7 @@
 
 #include <fstream>
 #include <iostream>
-#include "Especie.h"
+#include "../model/Especie.h"
 
 /**
  * @brief Carga el fichero CSV indicado, mostrando cada especie por pantalla.
@@ -15,7 +15,7 @@
  * @param rutaFichero Ruta del fichero CSV a leer.
  * @return true si el fichero se ha podido abrir, false en caso contrario.
  */
-bool LectorCSV::cargar(VDinamico<Especie> &vector, const std::string& rutaFichero) {
+bool LectorCSV::cargarVectorEspecie(VDinamico<Especie> &vector, const std::string& rutaFichero) {
 
     filasDescartadas_ = 0;
 
