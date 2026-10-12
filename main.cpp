@@ -90,8 +90,10 @@ int main()
         LectorCSV lector_csv;
         VDinamico<Especie> vectorCompleto;
         ListaDEnlazada<int> enteros;
+        ListaDEnlazada<Parque> parques;
         Especie especie;
-        if (!lector_csv.cargarVectorEspecie(vectorCompleto, RUTA_FICHERO_ESPECIES))
+        if (!lector_csv.cargarVector(vectorCompleto, RUTA_FICHERO_ESPECIES) ||
+            !lector_csv.cargarLista(parques, RUTA_FICHERO_PARQUES))
         {
             std::cerr << "Error: no se pudo abrir el fichero '" << RUTA_FICHERO_ESPECIES << "'.\n";
             std::cerr << "Comprueba que ejecutas el programa desde la raiz del proyecto "
@@ -99,6 +101,8 @@ int main()
             return 1;
         }
         std::cout << "Vector leido de fichero"<< std::endl;
+        std::cout << "Lista leida de fichero" << std::endl;
+
 
         VDinamico<Especie*> vectorEspNComun = getEspNComun(vectorCompleto);
 
@@ -109,7 +113,8 @@ int main()
         while (menuPrincipal < 3) {
             std::cout << "--- ELEIGE LA ENTREGA QUE QUIERES COMPROBAR: ---" << std::endl
                 << " 1. Practica 1." << std::endl
-                << " 2. Practica 2." << std::endl;
+                << " 2. Practica 2." << std::endl
+                << " 3. Salir. " << std::endl;
             std::cin >> menuPrincipal;
             switch (menuPrincipal) {
                 case(1):

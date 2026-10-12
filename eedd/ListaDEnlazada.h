@@ -72,15 +72,8 @@ ListaDEnlazada<T>::ListaDEnlazada(const ListaDEnlazada &original) {
 
 template<typename T>
 ListaDEnlazada<T>::~ListaDEnlazada() {
-    Nodo<T> *auxiliar = cabecera->siguiente;
-    cabecera = nullptr;
-    cola = nullptr;
-    nElementos = 0;
-    while (auxiliar != nullptr) {
-        delete auxiliar->anterior;
-        auxiliar = auxiliar->siguiente;
-    }
-    delete auxiliar->anterior;
+    while (cabecera != nullptr)
+        borraInicio();
 }
 
 template<typename T>

@@ -15,7 +15,7 @@
  * @param rutaFichero Ruta del fichero CSV a leer.
  * @return true si el fichero se ha podido abrir, false en caso contrario.
  */
-bool LectorCSV::cargarVectorEspecie(VDinamico<Especie> &vector, const std::string& rutaFichero) {
+bool LectorCSV::cargarVector(VDinamico<Especie> &vector, const std::string& rutaFichero) {
 
     filasDescartadas_ = 0;
 
@@ -188,4 +188,48 @@ void LectorCSV::mostrarEspecie(const Especie& especie) {
     std::cout << " - [" << especie.getCodigoEspecie() << "] " << especie.getNombreComun()
               << " (" << especie.getNombreCientfico() << ") - "
               << especie.getTipoPlanta() << "\n";
+}
+
+
+bool LectorCSV::cargarLista(ListaDEnlazada<Parque> &lista, const std::string& rutaFichero) {
+
+    filasDescartadas_ = 0;
+
+    std::ifstream fichero(rutaFichero);
+    if (!fichero.is_open()) {
+        return false;
+    }
+
+    std::string linea;
+    if (std::getline(fichero, linea)) {
+        eliminarBOM(linea);
+    }
+
+
+    int codigoParque;
+    std::string nombreParque;
+
+    while (std::getline(fichero, linea)) {
+        if (linea.empty()) {
+            continue;
+        }
+
+        if (contarCampos(linea) != 2) {
+            ++filasDescartadas_;
+            continue;
+        }
+
+        codigoParque = std::stoi(extraerCampo(linea, 0));
+        nombreParque = extraerCampo(linea, 2);
+        Parque aInsertar(codigoParque, nombreParque);
+        lista.insertaInicio(aInsertar);
+
+    }
+
+    numeroParques_= lista.getTamLista();
+    return true;
+}
+
+std::size_t LectorCSV::numeroParques() const {
+    return numeroParques_;
 }

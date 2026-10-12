@@ -18,7 +18,7 @@ class Parque {
     public:
         // Constructores
         Parque();
-        Parque(int codigoParque, std::string nombreParque, VDinamico<Especie> especies);
+        Parque(int codigoParque, std::string nombreParque);
         Parque(const Parque& original);
 
         // Destructor

@@ -9,10 +9,9 @@ Parque::Parque() {
 }
 
 
-Parque::Parque(int codigoParque, std::string nombreParque, VDinamico<Especie> especies) {
+Parque::Parque(int codigoParque, std::string nombreParque) {
     this->codigoParque = codigoParque;
     this->nombreParque = nombreParque;
-    this->especies = especies;
 }
 
 
