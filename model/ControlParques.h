@@ -35,7 +35,7 @@ public:
      * \param parque
      *      Parque al que queremos asignarle la especie.
      */
-    void asignarEspecieParque(const Especie& especie, Parque& parque);
+    void asignarEspecieParque(const Especie& especie, Parque& parque) const;
 
 
     /**

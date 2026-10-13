@@ -220,7 +220,7 @@ bool LectorCSV::cargarLista(ListaDEnlazada<Parque> &lista, const std::string& ru
         }
 
         codigoParque = std::stoi(extraerCampo(linea, 0));
-        nombreParque = extraerCampo(linea, 2);
+        nombreParque = extraerCampo(linea, 1);
         Parque aInsertar(codigoParque, nombreParque);
         lista.insertaFinal(aInsertar);
 

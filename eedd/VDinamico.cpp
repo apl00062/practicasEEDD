@@ -1,6 +1,8 @@
 
 #include "VDinamico.h"
 #include <algorithm>
+#include <stdexcept>
+#include <iostream>
 
 template<typename T>
 VDinamico<T>::VDinamico() {
@@ -151,21 +153,26 @@ void VDinamico<T>::insertar(const T &dato, unsigned int posicion) {
 
 
 template<typename T>
-void VDinamico<T>::eliminar(unsigned int posicion) {
-    if (posicion >= tamLogico) {
+T& VDinamico<T>::eliminar(unsigned int posicion) {
+    if (tamLogico == 0)
+        throw std::out_of_range("El vector esta vacio.");
+
+    if (posicion == UINT_MAX)
+        posicion = tamLogico-1;
+
+    if (posicion >= tamLogico)
         throw std::out_of_range("La posicion está vacía.");
-    }
-    if (posicion == UINT_MAX) {
-        --this->tamLogico;
-    }
-    else {
-        for (int i = posicion; i < this->tamLogico-2; ++i) {
-            this->vector[i] = this->vector[i+1];
-        }
-        this->vector[this->tamLogico-2] = this->vector[this->tamLogico-1];
-        --this->tamLogico;
-    }
+
+    T& dato = this->vector[posicion];
+
+    for (unsigned int i = posicion; i < this->tamLogico - 1; ++i)
+        this->vector[i] = this->vector[i+1];
+
+    --this->tamLogico;
+
+    return dato;
 }
+
 
 
 template<typename T>

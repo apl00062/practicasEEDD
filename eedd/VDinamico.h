@@ -63,8 +63,10 @@ class VDinamico {
          * y que nunca se consultará ya que no está en el rango del tamaño lógico.
          * \param posicion
          *      Posicion en la que queremos borrar el dato, si no hay valor, se borrará el último dato.
+         * \return
+         *      Devuelve el dato que hemos eliminado.
         */
-        void eliminar(unsigned int posicion = UINT_MAX);
+        T& eliminar(unsigned int posicion = UINT_MAX);
 
         /**
         * Metodo que llama a la función sort.

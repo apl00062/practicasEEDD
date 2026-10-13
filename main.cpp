@@ -75,10 +75,14 @@ void borrarMultiplosDiez(ListaDEnlazada<int> &enteros) {
     }
 }
 
-void imprimirPorPantalla(ListaDEnlazada<int> &enteros) {
+void imprimirPorPantalla(ListaDEnlazada<int> &enteros, int id, std::string titulo) {
+    std::string idS = std::to_string(id);
+    std::ofstream archivo("data/numerosListas"+idS+".txt");
+    archivo << titulo << std::endl;
     Iterador<int> iterador = enteros.getIterador();
+    std::cout << "Archivo Numero Listas " << id << " creado." << std::endl;
     while (iterador.haySiguiente()) {
-        std::cout << "Numero: " << iterador.dato() << std::endl;
+        archivo << "Numero: " << iterador.dato() << std::endl;
         iterador.aSiguiente();
     }
 }
@@ -93,15 +97,13 @@ void enlazarParques(ControlParques &controlParques) {
             controlParques.getEspecie(i)->getTipoPlanta() == "PALMACEA" ||
             controlParques.getEspecie(i)->getTipoPlanta() == "HERB_PERENNES" ||
             controlParques.getEspecie(i)->getTipoPlanta() == "FRONDOSA") {
-            for (int j = 1; j < controlParques.getTamParques(); j += 2) {
-                std::cout << controlParques.getParque(j)->getNombreParque() << std::endl;
-                std::cout << controlParques.getEspecie(i)->getTipoPlanta() << std::endl;
 
+            for (int j = 1; j <= controlParques.getTamParques(); j += 2) {
                 controlParques.asignarEspecieParque(*controlParques.getEspecie(i), *controlParques.getParque(j));
             }
         }
         else {
-            for (int j = 0; j < controlParques.getTamParques(); j += 2) {
+            for (int j = 2; j < controlParques.getTamParques(); j += 2) {
                 controlParques.asignarEspecieParque(*controlParques.getEspecie(i), *controlParques.getParque(j));
             }
         }
@@ -153,6 +155,7 @@ int main()
             switch (menuPrincipal) {
                 case(1):
                     while (practica1 != 5) {
+                        practica1 = 0;
                         std::cout << "--- PRÁCTICA 1 ---" << std::endl
                             << " 1. Mostrar los 50 primeros identificadores." << std::endl
                             << " 2. Mostrar los 50 primeros identificadores, una vez ordenados." << std::endl
@@ -222,35 +225,44 @@ int main()
 
                     case(2):
                         while (practica2 < 3) {
+                            practica2 = 0;
                             std::cout << "--- Practica 2 ---" << std::endl
                                 << " 1. Prueba con Enteros. " << std::endl
-                                << " 2. Prueba con Control de Parques." << std::endl;
+                                << " 2. Prueba con Control de Parques." << std::endl
+                                << " 3. Volver Atrás." << std::endl;
                             std::cin >> practica2;
                             switch (practica2) {
                                 case(1): {
+                                    int id = 1;
+                                    std::string insertar;
                                     insertarAlFinalLista(enteros);
-                                    std::cout << " 1. Valores crecientes desde 101 a 200. " << std::endl;
-                                    imprimirPorPantalla(enteros);
+                                    insertar = " === 1. Valores crecientes desde 101 a 200. ===";
+                                    imprimirPorPantalla(enteros, id, insertar);
+                                    id++;
                                     insertarAlPrincipioLista(enteros);
-                                    std::cout << " 2. Decrecientes desde 98 a 1. " << std::endl;
-                                    imprimirPorPantalla(enteros);
+                                    insertar = " === 2. Decrecientes desde 98 a 1. === ";
+                                    imprimirPorPantalla(enteros, id, insertar);
+                                    id++;
                                     insertarDelanteLista(enteros);
-                                    std::cout << " 3. Insertar el dato 100 delante del 101. " << std::endl;
-                                    imprimirPorPantalla(enteros);
+                                    insertar = " === 3. Insertar el dato 100 delante del 101. === ";
+                                    imprimirPorPantalla(enteros, id, insertar);
+                                    id++;
                                     insertarDetrasLista(enteros);
-                                    std::cout << " 4. Insertar el dato 99 detras del 98. " << std::endl;
-                                    imprimirPorPantalla(enteros);
+                                    insertar = " === 4. Insertar el dato 99 detras del 98. ===";
+                                    imprimirPorPantalla(enteros, id, insertar);
+                                    id++;
                                     borrarPrimerosYUltimos(enteros);
-                                    std::cout << " 5. Borrar los 10 primeros y los 10 ultimos. " << std::endl;
-                                    imprimirPorPantalla(enteros);
+                                    insertar = " === 5. Borrar los 10 primeros y los 10 ultimos. ===";
+                                    imprimirPorPantalla(enteros, id, insertar);
+                                    id++;
                                     borrarMultiplosDiez(enteros);
-                                    std::cout << " 6. Borrar los multiplos de 10. " << std::endl;
-                                    imprimirPorPantalla(enteros);
+                                    insertar = " === 6. Borrar los multiplos de 10. ===";
+                                    imprimirPorPantalla(enteros, id, insertar);
                                     break;
                             }
                                 case (2):
                                     enlazarParques(controlParques);
-                                    /**
+
                                     std::cout << "=== Prueba 1. Nombres Comunes ===" << std::endl;
                                     if (controlParques.buscarParque("PARQUE PRINCESA LEONOR")->
                                                 existeNombreComun("Eucalipto rojo"))
@@ -301,10 +313,13 @@ int main()
                                                   << std::endl;
 
                                     std::cout << "=== Prueba 4. Subcadena Rosa ===" << std::endl;
+                                    std::ofstream archivo("data/especiesRosa.txt");
                                     VDinamico<Especie*> subCadenaRosa = controlParques.listadoEspecieSubNombre("Rosa");
-                                    for (int i = 0; i < controlParques.getTamEspecies(); ++i) {
-                                        std::cout << "Especie: " << subCadenaRosa[i]->getNombreCientfico();
-                                    }**/
+                                    for (int i = 0; i < subCadenaRosa.getTamanioLogico(); ++i) {
+                                        archivo << "Especie: " << subCadenaRosa[i]->getNombreCientfico() << std::endl;
+                                    }
+                                    std::cout << " Archivo especies Rosa creado." << std::endl;
+                                    archivo.close();
                                     break;
                         }
                         break;

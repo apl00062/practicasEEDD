@@ -10,7 +10,6 @@
 
 
 class Parque {
-    private:
         int codigoParque;
         std::string nombreParque;
         VDinamico<Especie> especies;
@@ -18,7 +17,7 @@ class Parque {
     public:
         // Constructores
         Parque();
-        Parque(int codigoParque, std::string nombreParque);
+        Parque(int codigoParque, const  std::string &nombreParque);
         Parque(const Parque& original);
 
         // Destructor

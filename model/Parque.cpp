@@ -9,7 +9,7 @@ Parque::Parque() {
 }
 
 
-Parque::Parque(int codigoParque, std::string nombreParque) {
+Parque::Parque(int codigoParque, const std::string &nombreParque) {
     this->codigoParque = codigoParque;
     this->nombreParque = nombreParque;
 }
