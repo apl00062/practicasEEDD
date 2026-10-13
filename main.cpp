@@ -320,6 +320,9 @@ int main()
                                     }
                                     std::cout << " Archivo especies Rosa creado." << std::endl;
                                     archivo.close();
+
+                                    std::cout << "=== Prueba 5. Parques que contienen Abetos ===" << std::endl;
+                                    std::cout << controlParques.contarEspecieParque("Abeto") << std::endl;
                                     break;
                         }
                         break;
