@@ -6,6 +6,7 @@
 #include "model/Especie.h"
 #include "io/LectorCSV.h"
 #include "eedd/ListaDEnlazada.h"
+#include "model/ControlParques.h"
 
 
 const std::string RUTA_FICHERO_ESPECIES = "data/arbolado-especies.csv";
@@ -28,7 +29,7 @@ VDinamico<Especie*> getEspNComun(VDinamico<Especie>& vEspecies)
     return vectorEspNComun;
 }
 
-/// Operaciones para la prueba 1 de la Lista Doblemente Enlazada
+/// ================= Operaciones para la prueba 1 de la Lista Doblemente Enlazada ===================
 void insertarAlFinalLista(ListaDEnlazada<int> &enteros) {
     for (int i = 101; i <= 200; ++i)
         enteros.insertaFinal(i);
@@ -82,18 +83,47 @@ void imprimirPorPantalla(ListaDEnlazada<int> &enteros) {
     }
 }
 
+/// ===================================================================================
+
+/// ======================== Operaciones para la prueba 2 de la Lista Doblemente Enlazada ===========================
+void enlazarParques(ControlParques &controlParques) {
+    for (int i = 0; i < controlParques.getTamEspecies(); ++i) {
+        if (controlParques.getEspecie(i)->getTipoPlanta() == "ARBUSTO" ||
+            controlParques.getEspecie(i)->getTipoPlanta() == "CONIFERA" ||
+            controlParques.getEspecie(i)->getTipoPlanta() == "PALMACEA" ||
+            controlParques.getEspecie(i)->getTipoPlanta() == "HERB_PERENNES" ||
+            controlParques.getEspecie(i)->getTipoPlanta() == "FRONDOSA") {
+            for (int j = 1; j < controlParques.getTamParques(); j += 2) {
+                std::cout << controlParques.getParque(j)->getNombreParque() << std::endl;
+                std::cout << controlParques.getEspecie(i)->getTipoPlanta() << std::endl;
+
+                controlParques.asignarEspecieParque(*controlParques.getEspecie(i), *controlParques.getParque(j));
+            }
+        }
+        else {
+            for (int j = 0; j < controlParques.getTamParques(); j += 2) {
+                controlParques.asignarEspecieParque(*controlParques.getEspecie(i), *controlParques.getParque(j));
+            }
+        }
+    }
+}
+
 int main()
 {
     try
     {
         //INSTANCIAR Y MOSTRAR EL VECTOR DE Especies
         LectorCSV lector_csv;
+        VDinamico<Especie> vectorCompletoPr1;
         VDinamico<Especie> vectorCompleto;
         ListaDEnlazada<int> enteros;
-        ListaDEnlazada<Parque> parques;
+        ListaDEnlazada<Parque> listaParques;
         Especie especie;
-        if (!lector_csv.cargarVector(vectorCompleto, RUTA_FICHERO_ESPECIES) ||
-            !lector_csv.cargarLista(parques, RUTA_FICHERO_PARQUES))
+
+
+        if (!lector_csv.cargarVector(vectorCompletoPr1, RUTA_FICHERO_ESPECIES) ||
+            !lector_csv.cargarLista(listaParques, RUTA_FICHERO_PARQUES) ||
+            !lector_csv.cargarVector(vectorCompleto, RUTA_FICHERO_ESPECIES))
         {
             std::cerr << "Error: no se pudo abrir el fichero '" << RUTA_FICHERO_ESPECIES << "'.\n";
             std::cerr << "Comprueba que ejecutas el programa desde la raiz del proyecto "
@@ -104,13 +134,17 @@ int main()
         std::cout << "Lista leida de fichero" << std::endl;
 
 
-        VDinamico<Especie*> vectorEspNComun = getEspNComun(vectorCompleto);
+        VDinamico<Especie*> vectorEspNComun = getEspNComun(vectorCompletoPr1);
 
-        int practica1 = 0;
-        int practica2 = 0;
+        vectorCompleto.ordenar();
+
+        ControlParques controlParques(vectorCompleto, listaParques);
+
         int menuPrincipal = 0;
 
         while (menuPrincipal < 3) {
+            int practica1 = 0;
+            int practica2 = 0;
             std::cout << "--- ELEIGE LA ENTREGA QUE QUIERES COMPROBAR: ---" << std::endl
                 << " 1. Practica 1." << std::endl
                 << " 2. Practica 2." << std::endl
@@ -134,19 +168,19 @@ int main()
                                 std::cout << "Identificador de las primeras 50 especies" << std::endl;
                                 for (int i = 0; i < 50; ++i)
                                 {
-                                    std::cout<<std::to_string(i+1)<<": "<<vectorCompleto[i].getCodigoEspecie()<<std::endl;
+                                    std::cout<<std::to_string(i+1)<<": "<<vectorCompletoPr1[i].getCodigoEspecie()<<std::endl;
                                 }
                                 break;
 
                             case(2):
                                 //Ordenación del vector
                                 std::cout<<"==================================================="<< std::endl;
-                                vectorCompleto.ordenar();
+                                vectorCompletoPr1.ordenar();
                                 std::cout << "Vector ordenado. Mostrar las primeras 50 especies" << std::endl;
                                 for (int i = 0; i < 50; i++)
                                 {
                                     std::cout<< std::to_string(i+1) << " ";
-                                    vectorCompleto[i].mostrarInfo();
+                                    vectorCompletoPr1[i].mostrarInfo();
                                 }
                                 break;
 
@@ -156,15 +190,15 @@ int main()
                                 std::cout << "Posición de códigos de especies: " << std::endl;
                                 int posicion;
                                 especie.setCodigoEspecie("CTA");
-                                posicion = vectorCompleto.busquedaDicotomica(Especie("CTA", "","",""));
+                                posicion = vectorCompletoPr1.busquedaDicotomica(Especie("CTA", "","",""));
                                 std::cout << "   Posicion de CTA: " << posicion << std::endl;
-                                posicion = vectorCompleto.busquedaDicotomica(Especie("DMD", "","",""));
+                                posicion = vectorCompletoPr1.busquedaDicotomica(Especie("DMD", "","",""));
                                 std::cout << "   Posicion de DMD: " << posicion << std::endl;
-                                posicion = vectorCompleto.busquedaDicotomica(Especie("HCN", "","",""));
+                                posicion = vectorCompletoPr1.busquedaDicotomica(Especie("HCN", "","",""));
                                 std::cout << "   Posicion de HCN: " << posicion << std::endl;
-                                posicion = vectorCompleto. busquedaDicotomica(Especie("NDOF", "","",""));
+                                posicion = vectorCompletoPr1. busquedaDicotomica(Especie("NDOF", "","",""));
                                 std::cout << "   Posicion de NDOF : " << posicion << std::endl;
-                                posicion = vectorCompleto.busquedaDicotomica(Especie("JAX", "","",""));
+                                posicion = vectorCompletoPr1.busquedaDicotomica(Especie("JAX", "","",""));
                                 std::cout << "   Posicion de JAX: " << posicion << std::endl;
                                 break;
 
@@ -187,10 +221,10 @@ int main()
                         break;
 
                     case(2):
-                        while (practica2 < 12) {
+                        while (practica2 < 3) {
                             std::cout << "--- Practica 2 ---" << std::endl
                                 << " 1. Prueba con Enteros. " << std::endl
-                                << " 2. " << std::endl;
+                                << " 2. Prueba con Control de Parques." << std::endl;
                             std::cin >> practica2;
                             switch (practica2) {
                                 case(1): {
@@ -214,6 +248,64 @@ int main()
                                     imprimirPorPantalla(enteros);
                                     break;
                             }
+                                case (2):
+                                    enlazarParques(controlParques);
+                                    /**
+                                    std::cout << "=== Prueba 1. Nombres Comunes ===" << std::endl;
+                                    if (controlParques.buscarParque("PARQUE PRINCESA LEONOR")->
+                                                existeNombreComun("Eucalipto rojo"))
+                                        std::cout << "El Parque Princesa Leonor, SI contiene la especie Eucalipto Rojo."
+                                                  << std::endl;
+                                    else
+                                        std::cout << "El Parque Princesa Leonor, NO contiene la especie Eucalipto Rojo."
+                                                  << std::endl;
+
+                                    if (controlParques.buscarParque("PARQUE PRINCESA LEONOR")->
+                                                existeNombreComun("Arce de Sierra"))
+                                        std::cout << "El Parque Princesa Leonor, SI contiene la especie Arce de Sierra."
+                                                  << std::endl;
+                                    else
+                                        std::cout << "El Parque Princesa Leonor, NO contiene la especie Arce de Sierra."
+                                                  << std::endl;
+
+
+                                    std::cout << " === Prueba 2. Nombres Cientificos ===" << std::endl;
+                                    if (controlParques.buscarParque("PARQUE MADRID RIO")->
+                                                existeNombreCientifico("Hebe floribunda"))
+                                        std::cout << "El Parque Madrid Rio, SI contiene la especie Hebe floribunda."
+                                                  << std::endl;
+                                    else
+                                        std::cout << "El Parque Madrid Rio, NO contiene la especie Hebe floribunda."
+                                                  << std::endl;
+
+                                    if (controlParques.buscarParque("PARQUE MADRID RIO")->
+                                                existeNombreComun("Ananas camosa"))
+                                        std::cout << "El Parque Madrid Rio, SI contiene la especie Ananas camosa."
+                                                  << std::endl;
+                                    else
+                                        std::cout << "El Parque Madrid Rio, NO contiene la especie Ananas camosa."
+                                                  << std::endl;
+
+                                    std::cout << "=== Prueba 3. Busqueda de Parques ===" << std::endl;
+                                    if (controlParques.buscarParque("PARQUE JUAN CARLOS III") == nullptr)
+                                        std::cout << "El Parque Juan Carlos III, no existe." << std::endl;
+                                    else
+                                        std::cout << "El Parque Juan Carlos III, tiene el codigo: "
+                                                  << controlParques.buscarParque("PARQUE JUAN CARLOS III")->getCodigoParque()
+                                                  << std::endl;
+                                    if (controlParques.buscarParque("VIVERO DE MIGAS CALIENTES") == nullptr)
+                                        std::cout << "El Parque Vivero de Migas Calientes, no existe." << std::endl;
+                                    else
+                                        std::cout << "El Parque Vivero de Migas Calientes, tiene el codigo: "
+                                                  << controlParques.buscarParque("VIVERO DE MIGAS CALIENTES")->getCodigoParque()
+                                                  << std::endl;
+
+                                    std::cout << "=== Prueba 4. Subcadena Rosa ===" << std::endl;
+                                    VDinamico<Especie*> subCadenaRosa = controlParques.listadoEspecieSubNombre("Rosa");
+                                    for (int i = 0; i < controlParques.getTamEspecies(); ++i) {
+                                        std::cout << "Especie: " << subCadenaRosa[i]->getNombreCientfico();
+                                    }**/
+                                    break;
                         }
                         break;
 

@@ -11,11 +11,21 @@
 #include "Parque.h"
 
 class ControlParques {
-    VDinamico<Especie> especies;
-    ListaDEnlazada<Parque> parques;
+    VDinamico<Especie>* especies;
+    ListaDEnlazada<Parque>* parques;
 
 public:
+    /// Constructores: Por defecto y Parametrizado
     ControlParques();
+    ControlParques(VDinamico<Especie> &especie, ListaDEnlazada<Parque> &parques);
+
+    /// Getters y Setters
+    unsigned int getTamEspecies () { return especies->getTamanioLogico(); }
+    unsigned int getTamParques () { return parques->getTamLista(); }
+    Parque* getParque(unsigned int id);
+    Especie* getEspecie(unsigned int posicion);
+
+
 
     /**
      * Se encarga de enlazar la especie con el parque que la contiene.

@@ -45,7 +45,7 @@ class VDinamico {
 
         /// Operadores
         VDinamico& operator=(const VDinamico& original);
-        T& operator[](int posicion);
+        T& operator[](unsigned int posicion);
         bool operator==(const VDinamico& original);
 
         /**

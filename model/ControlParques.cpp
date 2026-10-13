@@ -11,8 +11,30 @@ ControlParques::ControlParques() {
 
 }
 
+ControlParques::ControlParques(VDinamico<Especie> &especie, ListaDEnlazada<Parque> &parques) {
+    this->especies = &especie;
+    this->parques = &parques;
+}
+
+Parque* ControlParques::getParque(unsigned int id) {
+    Iterador<Parque> iterador(parques->getIterador());
+    while (iterador.haySiguiente()) {
+        if (iterador.dato().getCodigoParque() == id) {
+            return &iterador.dato();
+        }
+    }
+    throw std::invalid_argument("El id no existe.");
+}
+
+Especie* ControlParques::getEspecie(unsigned int posicion) {
+    if (posicion >= this->getTamEspecies())
+        throw std::invalid_argument("La posicion se encuentra fuera del vector.");
+
+    return &(*this->especies)[posicion];
+}
+
 void ControlParques::asignarEspecieParque(const Especie &especie, Parque &parque) {
-    Parque* aAsignar = parques.buscarDato(parque);
+    Parque* aAsignar = parques->buscarDato(parque);
     if (aAsignar != nullptr)
         aAsignar->insertarEspecie(especie);
     else
@@ -21,7 +43,7 @@ void ControlParques::asignarEspecieParque(const Especie &especie, Parque &parque
 
 int ControlParques::contarEspecieParque(const std::string& nombreComun) {
     int contador = 0;
-    Iterador<Parque> iterador = parques.getIterador();
+    Iterador<Parque> iterador = parques->getIterador();
     while (iterador.haySiguiente()) {
         if (iterador.dato().existeNombreComun(nombreComun))
             contador++;
@@ -31,15 +53,15 @@ int ControlParques::contarEspecieParque(const std::string& nombreComun) {
 
 VDinamico<Especie*> ControlParques::listadoEspecieSubNombre(const std::string& subCadena) {
     VDinamico<Especie*> listado;
-    for (int i = 0; i < especies.getTamanioLogico(); ++i) {
-        if (especies[i].getNombreCientfico().find(subCadena) != std::string::npos)
-            listado.insertar(&especies[i]);
+    for (int i = 0; i < especies->getTamanioLogico(); ++i) {
+        if ((*especies)[i].getNombreCientfico().find(subCadena) != std::string::npos)
+            listado.insertar(&(*especies)[i]);
     }
     return listado;
 }
 
 Parque *ControlParques::buscarParque(const std::string& nombreParque) {
-    Iterador<Parque> iterador = parques.getIterador();
+    Iterador<Parque> iterador = parques->getIterador();
     while (iterador.haySiguiente()) {
         if (iterador.dato().getNombreParque() == nombreParque)
             return &iterador.dato();

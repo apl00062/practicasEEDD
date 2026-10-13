@@ -28,16 +28,77 @@ public:
     Iterador<T> getIterador();
     T& getDatoCabecera();
     T& getDatoCola();
-    int getTamLista() const { return this->nElementos; }
+    unsigned int getTamLista() const { return this->nElementos; }
 
+    /**
+     * Metodo que comprueba que el iterador apunta a un elemento de esta lista.
+     *
+     * \param iterador
+     *      Iterador que queremos comprobar.
+    */
     bool comprabarIterador(Iterador<T> &iterador);
 
+    /**
+     * Metodo que crea e inserta un nuevo nodo en el incio de la lista, maneja todas las posibles casuisticas.
+     * Aumenta el tamaño de la lista +1.
+     *
+     * \param dato
+     *      Dato con el que crearemos el nodo.
+    */
     void insertaInicio(T& dato);
+
+    /**
+     * Metodo que crea e inserta un nuevo nodo en el final de la lista, maneja todas las posibles casuisticas.
+     * Aumenta el tamaño de la lista +1.
+     *
+     * \param dato
+     *      Dato con el que crearemos el nodo.
+    */
     void insertaFinal(T& dato);
+
+    /**
+     * Metodo que crea e inserta un nuevo nodo en el lugar donde el iterador apunte. Este metodo, primero llama a
+     * comprobarIterador(). Si el iterador apunta a la cabecera llama a insertarInicio() y si apunta a la cola
+     * llama a insertarFinal(). Aumenta el tamaño de la lista +1.
+     *
+     * \param iterador
+     *      Iterador que apunta a la posicion en la que queremos insertar el nodo.
+     * \param dato
+     *      Dato con el que crearemos el nodo.
+     *
+     * \exception
+     *      Salta una excepcion, si el metodo comprabarIterador() devuelve null.
+    */
     void insertar(Iterador<T> &iterador, T& dato);
 
+    /**
+     * Metodo que borra el nodo al que apunta la cabecera, asignando la cabecera al nodo siguiente a la cabecera.
+     * Disminuye el tamaño de la lista en -1.
+     *
+     * \exception
+     *      Salta una excepcion si la lista esta vacia.
+    */
     void borraInicio();
+
+    /**
+     * Metodo que borra el nodo al que apunta la cola, asignando la cola al nodo anterior a la cola.
+     * Disminuye el tamño de la lista en -1.
+     *
+     * \exception
+     *      Salta una excepcion si la lista esta vacia.
+    */
     void borraFinal();
+
+    /**
+     * Metodo que borra el nodo al que apunta al iterador. Primero llama a comprabarIterador(). Si el iterador apunta a
+     * la cabecera, llama a borrarInicio(), si apunta a la cola llama a borraFinal(). Disminuye el tamaño en -1.
+     *
+     * \param iterador
+     *      Iterador que apunta a la posicion que queremos borrar.
+     *
+     * \exception
+     *      Salta una excepcion si comprobarIterador() devuelve null.
+    */
     void borrar(Iterador<T> &iterador);
 
     void concatena(const ListaDEnlazada &original) { this+original; }
@@ -211,16 +272,16 @@ void ListaDEnlazada<T>::borraInicio() {
     if (cabecera == nullptr)
         throw std::out_of_range("La lista esta vacia.");
     if (cabecera == cola) {
-        cola->anterior = nullptr;
-        cabecera->siguiente = nullptr;
-        delete cola;
         delete cabecera;
+        cabecera = nullptr;
+        cola = nullptr;
     }
     else {
         Nodo<T> *auxiliar = cabecera->siguiente;
         auxiliar->anterior = nullptr;
         delete cabecera;
         cabecera = auxiliar;
+        auxiliar = nullptr;
     }
     --nElementos;
 }

@@ -76,8 +76,8 @@ VDinamico<T>::~VDinamico() {
 
 
 template<typename T>
-T& VDinamico<T>::operator[](int posicion) {
-    if (posicion > tamLogico-1) {
+T& VDinamico<T>::operator[](unsigned int posicion) {
+    if (posicion >= tamLogico) {
         throw std::out_of_range("La posicion indicada se encuentra vacía.");
     }
     return this->vector[posicion];
@@ -131,8 +131,6 @@ void VDinamico<T>::aumentarTamVector(unsigned int tamLogico) {
 
 template<typename T>
 void VDinamico<T>::insertar(const T &dato, unsigned int posicion) {
-    if (posicion < -1)
-        throw std::invalid_argument("La posicion no puede ser negativa");
     if (posicion > this->tamLogico && posicion != UINT_MAX) {
         throw std::out_of_range("La posicion tiene que encontrarse dentro del tamanio logico");
     }
