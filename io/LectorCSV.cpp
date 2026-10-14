@@ -226,7 +226,7 @@ bool LectorCSV::cargarLista(ListaDEnlazada<Parque> &lista, const std::string& ru
 
     }
 
-    numeroParques_= lista.getTamLista();
+    numeroParques_ = lista.getTamLista();
     return true;
 }
 

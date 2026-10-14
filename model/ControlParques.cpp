@@ -24,9 +24,9 @@ Parque* ControlParques::getParque(unsigned int id) {
         }
         iterador.aSiguiente();
     }
-
-    if (iterador.dato().getCodigoParque() == id)
+    if (iterador.dato().getCodigoParque() == id) {
         return &iterador.dato();
+    }
 
     throw std::invalid_argument("El id no existe.");
 }
@@ -39,11 +39,7 @@ Especie* ControlParques::getEspecie(unsigned int posicion) {
 }
 
 void ControlParques::asignarEspecieParque(const Especie &especie, Parque &parque) const{
-    Parque* aAsignar = parques->buscarDato(parque);
-    if (aAsignar != nullptr)
-        aAsignar->insertarEspecie(especie);
-    else
-        throw std::invalid_argument("El parque no existe.");
+    parque.insertarEspecie(especie);;
 }
 
 int ControlParques::contarEspecieParque(const std::string& nombreComun) {
@@ -54,6 +50,10 @@ int ControlParques::contarEspecieParque(const std::string& nombreComun) {
             contador++;
         iterador.aSiguiente();
     }
+
+    if (iterador.dato().existeNombreComun(nombreComun))
+        ++contador;
+
     return contador;
 }
 

@@ -31,7 +31,7 @@ VDinamico<Especie*> getEspNComun(VDinamico<Especie>& vEspecies)
 
 /// ================= Operaciones para la prueba 1 de la Lista Doblemente Enlazada ===================
 void insertarAlFinalLista(ListaDEnlazada<int> &enteros) {
-    for (int i = 101; i <= 200; ++i)
+    for (int i = 101; i < 200; ++i)
         enteros.insertaFinal(i);
 }
 
@@ -98,12 +98,12 @@ void enlazarParques(ControlParques &controlParques) {
             controlParques.getEspecie(i)->getTipoPlanta() == "HERB_PERENNES" ||
             controlParques.getEspecie(i)->getTipoPlanta() == "FRONDOSA") {
 
-            for (int j = 1; j <= controlParques.getTamParques(); j += 2) {
+            for (int j = 2; j <= controlParques.getTamParques(); j += 2) {
                 controlParques.asignarEspecieParque(*controlParques.getEspecie(i), *controlParques.getParque(j));
             }
         }
         else {
-            for (int j = 2; j < controlParques.getTamParques(); j += 2) {
+            for (int j = 1; j < controlParques.getTamParques(); j += 2) {
                 controlParques.asignarEspecieParque(*controlParques.getEspecie(i), *controlParques.getParque(j));
             }
         }
