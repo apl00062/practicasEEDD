@@ -35,6 +35,7 @@ public:
 
     /// Getters y Setters
     void setEspecie(Especie *especie);
+    float getAltura() const;
 
     /// Getters provenientes del puntero a especie
     std::string getCodigoEspecie() const;

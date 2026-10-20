@@ -50,6 +50,10 @@ void Arbol::setEspecie(Especie* especie) {
     this->especie = especie;
 }
 
+float Arbol::getAltura() const {
+    return this->altura;
+}
+
 std::string Arbol::getCodigoEspecie() const{
     return especie->getCodigoEspecie();
 }

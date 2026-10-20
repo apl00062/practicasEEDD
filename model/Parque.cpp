@@ -5,7 +5,7 @@
 #include "Parque.h"
 
 Parque::Parque() {
-    especies = VDinamico<Especie>();
+    arboles = VDinamico<Arbol>();
 }
 
 
@@ -18,12 +18,11 @@ Parque::Parque(int codigoParque, const std::string &nombreParque) {
 Parque::Parque(const Parque &original) {
     this->codigoParque = original.codigoParque;
     this->nombreParque = original.nombreParque;
-    this->especies = original.especies;
+    this->arboles = original.arboles;
 }
 
 
 Parque::~Parque() {
-
 }
 
 
@@ -32,8 +31,8 @@ int Parque::getCodigoParque() {
 }
 
 
-Especie Parque::getEspecie(int posicion) {
-    return this->especies[posicion];
+Arbol& Parque::getArbol(int posicion) {
+    return this->arboles[posicion];
 }
 
 
@@ -52,28 +51,58 @@ void Parque::setNombreParque(std::string nombreParque) {
 }
 
 
-void Parque::insertarEspecie(const Especie& especie) {
-    especies.insertar(especie);
-}
-
-
-bool Parque::existeNombreComun(std::string nombreComun) {
-    for (int i = 0; i < especies.getTamanioLogico(); ++i) {
-        if (especies[i].getNombreComun() == nombreComun)
-            return true;
-    }
-    return false;
-}
-
-
-bool Parque::existeNombreCientifico(std::string nombreCientifico) {
-    for (int i = 0; i < especies.getTamanioLogico(); ++i) {
-        if (especies[i].getNombreCientfico() == nombreCientifico)
-            return true;
-    }
-    return false;
-}
-
 bool Parque::operator==(const Parque &original) const{
     return this->codigoParque == original.codigoParque;
 }
+
+void Parque::insertarArbol(const Arbol& arbol) {
+    arboles.insertar(arbol);
+}
+
+int Parque::contarNumeroEspecies() {
+    if (arboles.getTamanioLogico() <= 0)
+        throw std::out_of_range("El vector de arboles esta vacio.");
+    int contador = 0;
+    VDinamico<std::string> especies;
+    for (int i = 0; i < this->arboles.getTamanioLogico(); ++i) {
+        for (int j = 0; j < especies.getTamanioLogico(); ++j) {
+            if (this->arboles[i].getCodigoEspecie() != especies[j]) {
+                contador++;
+                especies.insertar(this->arboles[i].getCodigoEspecie());
+            }
+        }
+    }
+    return contador;
+}
+
+int Parque::contarTiposPlantas() {
+    if (arboles.getTamanioLogico() <= 0)
+        throw std::out_of_range("El vector de arboles esta vacio.");
+    int contador = 0;
+    VDinamico<std::string> plantas;
+    for (int i = 0; i < this->arboles.getTamanioLogico(); ++i) {
+        for (int j = 0; j < plantas.getTamanioLogico(); ++j) {
+            if (this->arboles[i].getTipoEspecie() != plantas[j]) {
+                contador++;
+                plantas.insertar(this->arboles[i].getTipoEspecie());
+            }
+        }
+    }
+    return contador;
+}
+
+const Arbol& Parque::getArbolMasAlto() {
+    if (arboles.getTamanioLogico() <= 0)
+        throw std::out_of_range("El vector de arboles esta vacio.");
+    float altura = 0;
+    int posicion = 0;
+    for (int i = 0; i < this->arboles.getTamanioLogico(); ++i) {
+        if (altura < this->arboles[i].getAltura()) {
+            posicion = i;
+            altura = this->arboles[i].getAltura();
+        }
+    }
+    return this->arboles[posicion];
+}
+
+

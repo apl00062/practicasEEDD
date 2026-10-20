@@ -2,7 +2,7 @@
 // Created by Ángel Padilla Luzón on 01/10/2026.
 //
 
-#include "Especie.h"
+#include "Arbol.h"
 #include "../eedd/VDinamico.h"
 
 #ifndef PRACTICACPP_PARQUE_H
@@ -12,7 +12,7 @@
 class Parque {
         int codigoParque;
         std::string nombreParque;
-        VDinamico<Especie> especies;
+        VDinamico<Arbol> arboles;
 
     public:
         // Constructores
@@ -26,7 +26,7 @@ class Parque {
         // Getters
         int getCodigoParque();
         std::string getNombreParque();
-        Especie getEspecie(int posicion);
+        Arbol& getArbol(int posicion);
 
         // Setters
         void setCodigoParque(int codigoParque);
@@ -36,9 +36,11 @@ class Parque {
         bool operator==(const Parque &original) const;
 
         // Utilidades
-        void insertarEspecie(const Especie& especie);
-        bool existeNombreComun(std::string nombreComun);
-        bool existeNombreCientifico(std::string nombreCientifico);
+        void insertarArbol(const Arbol& arbol);
+        const Arbol& getArbolMasAlto();
+        int contarNumeroEspecies();
+        int contarTiposPlantas();
+
 
 
 
