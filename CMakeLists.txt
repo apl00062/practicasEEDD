@@ -10,10 +10,12 @@ add_executable(PracticaCPP
         eedd/ListaDEnlazada.h
         model/Parque.cpp
         model/Parque.h
-        eedd/Operadores/Nodo.h
+        eedd/Operadores/NodoListaDEnlazada.h
         eedd/Operadores/Iterador.h
         model/ControlParques.cpp
         model/ControlParques.h
         model/Arbol.cpp
         model/Arbol.h
+        eedd/AVL.h
+        eedd/Operadores/NodoAVL.h
 )

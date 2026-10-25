@@ -4,12 +4,11 @@
 
 
 #include <stdexcept>
-#include <iostream>
 #include "Operadores/Iterador.h"
 
 template<typename T>
 class ListaDEnlazada {
-    Nodo<T> *cabecera, *cola;
+    NodoListaDEnlazada<T> *cabecera, *cola;
     int nElementos;
 
 public:
@@ -111,22 +110,22 @@ ListaDEnlazada<T>::ListaDEnlazada(const ListaDEnlazada &original) {
     if (original.cabecera == nullptr || original.cola == nullptr )
         throw std::invalid_argument("La lista está vacía.");
     if (original.cabecera == original.cola) {
-        Nodo<T> *nuevo = new Nodo<T>(original.cabecera->dato, nullptr, nullptr);
+        NodoListaDEnlazada<T> *nuevo = new NodoListaDEnlazada<T>(original.cabecera->dato, nullptr, nullptr);
         this->cabecera = nuevo;
         this->cola = nuevo;
     }
     else {
-        this->cabecera = new Nodo<T>(original.cabecera->dato, nullptr, nullptr);
+        this->cabecera = new NodoListaDEnlazada<T>(original.cabecera->dato, nullptr, nullptr);
         Iterador<T> iteradorOriginal = Iterador<T>(original.cabecera);
         Iterador<T> iteradorThis = Iterador<T>(this->cabecera);
         while (iteradorOriginal.haySiguiente()) {
-            Nodo<T> *nuevo = new Nodo<T>(iteradorOriginal.nodo->dato, iteradorOriginal.nodo->anterior,
+            NodoListaDEnlazada<T> *nuevo = new NodoListaDEnlazada<T>(iteradorOriginal.nodo->dato, iteradorOriginal.nodo->anterior,
                 iteradorOriginal.nodo->siguiente);
             iteradorOriginal.nodo->siguiente = nuevo;
             iteradorOriginal.aSiguiente();
             iteradorThis.aSiguiente();
         }
-        this->cola = new Nodo<T>(original.cola->dato, original.cola->anterior, nullptr);
+        this->cola = new NodoListaDEnlazada<T>(original.cola->dato, original.cola->anterior, nullptr);
         this->nElementos = original.nElementos;
     }
 }
@@ -167,13 +166,13 @@ ListaDEnlazada<T> &ListaDEnlazada<T>::operator+(const ListaDEnlazada &original) 
     Iterador<T> iteradorOriginal = Iterador<T>(original.cabecera->siguiente);
     Iterador<T> iteradorThis = Iterador<T>(this->cola);
     while (iteradorOriginal.haySiguiente()) {
-        Nodo<T> *nuevo = new Nodo<T>(iteradorOriginal.dato(), iteradorOriginal.nodo->anterior,
+        NodoListaDEnlazada<T> *nuevo = new NodoListaDEnlazada<T>(iteradorOriginal.dato(), iteradorOriginal.nodo->anterior,
             iteradorOriginal.nodo->siguiente);
         iteradorThis.nodo->siguiente = nuevo;
         iteradorOriginal.aSiguiente();
         iteradorThis.aSiguiente();
     }
-    Nodo<T> *nuevo = new Nodo<T>(iteradorOriginal.dato(), iteradorOriginal.nodo->anterior, nullptr);
+    NodoListaDEnlazada<T> *nuevo = new NodoListaDEnlazada<T>(iteradorOriginal.dato(), iteradorOriginal.nodo->anterior, nullptr);
     iteradorThis.nodo->siguiente = nuevo;
     cola = nuevo;
 }
@@ -201,7 +200,7 @@ Iterador<T> ListaDEnlazada<T>::getIterador() {
 
 template<typename T>
 bool ListaDEnlazada<T>::comprabarIterador(Iterador<T> &iterador) {
-    Nodo<T> *aux = this->cabecera;
+    NodoListaDEnlazada<T> *aux = this->cabecera;
 
     while (aux != nullptr && iterador.nodo != aux) {
         aux = aux->siguiente;
@@ -212,17 +211,17 @@ bool ListaDEnlazada<T>::comprabarIterador(Iterador<T> &iterador) {
 template<typename T>
 void ListaDEnlazada<T>::insertaInicio(T &dato) {
     if (cabecera == nullptr) {
-        Nodo<T> *nuevo = new Nodo<T>(dato,nullptr,nullptr);
+        NodoListaDEnlazada<T> *nuevo = new NodoListaDEnlazada<T>(dato,nullptr,nullptr);
         cabecera = nuevo;
         cola = nuevo;
     }
     else if (cabecera == cola) {
-        Nodo<T> *nuevo = new Nodo<T>(dato, nullptr, cola);
+        NodoListaDEnlazada<T> *nuevo = new NodoListaDEnlazada<T>(dato, nullptr, cola);
         cola->anterior = nuevo;
         cabecera = nuevo;
     }
     else {
-        Nodo<T> *nuevo = new Nodo<T>(dato, nullptr, cabecera);
+        NodoListaDEnlazada<T> *nuevo = new NodoListaDEnlazada<T>(dato, nullptr, cabecera);
         cabecera->anterior = nuevo;
         cabecera = nuevo;
     }
@@ -240,7 +239,7 @@ void ListaDEnlazada<T>::insertar(Iterador<T> &iterador, T &dato) {
     else if (cola == cabecera)
         this->insertaInicio(dato);
     else {
-        Nodo<T>* nuevo = new Nodo<T>(dato, iterador.nodo->anterior, iterador.nodo);
+        NodoListaDEnlazada<T>* nuevo = new NodoListaDEnlazada<T>(dato, iterador.nodo->anterior, iterador.nodo);
         iterador.nodo->anterior->siguiente = nuevo;
         iterador.nodo->anterior = nuevo;
     }
@@ -250,17 +249,17 @@ void ListaDEnlazada<T>::insertar(Iterador<T> &iterador, T &dato) {
 template<typename T>
 void ListaDEnlazada<T>::insertaFinal(T &dato) {
     if (cabecera == nullptr) {
-        Nodo<T> *nuevo = new Nodo<T>(dato, nullptr, nullptr);
+        NodoListaDEnlazada<T> *nuevo = new NodoListaDEnlazada<T>(dato, nullptr, nullptr);
         cabecera = nuevo;
         cola = nuevo;
     }
     else if (cabecera == cola) {
-        Nodo<T> *nuevo = new Nodo<T>(dato, cabecera, nullptr);
+        NodoListaDEnlazada<T> *nuevo = new NodoListaDEnlazada<T>(dato, cabecera, nullptr);
         cabecera->siguiente = nuevo;
         cola = nuevo;
     }
     else {
-        Nodo<T> *nuevo = new Nodo<T>(dato, cola, nullptr);
+        NodoListaDEnlazada<T> *nuevo = new NodoListaDEnlazada<T>(dato, cola, nullptr);
         cola->siguiente = nuevo;
         cola = nuevo;
     }
@@ -277,7 +276,7 @@ void ListaDEnlazada<T>::borraInicio() {
         cola = nullptr;
     }
     else {
-        Nodo<T> *auxiliar = cabecera->siguiente;
+        NodoListaDEnlazada<T> *auxiliar = cabecera->siguiente;
         auxiliar->anterior = nullptr;
         delete cabecera;
         cabecera = auxiliar;
@@ -293,7 +292,7 @@ void ListaDEnlazada<T>::borrar(Iterador<T> &iterador) {
     if (!comprabarIterador(iterador))
         throw std::invalid_argument("El iterador no apunta a ningun elemento de esta lista.");
 
-    Nodo<T> *siguienteIterador = iterador.nodo->siguiente;
+    NodoListaDEnlazada<T> *siguienteIterador = iterador.nodo->siguiente;
     if (cabecera == cola)
         borraInicio();
     else if (iterador.nodo == cabecera)
@@ -301,7 +300,7 @@ void ListaDEnlazada<T>::borrar(Iterador<T> &iterador) {
     else if (iterador.nodo == cola)
         borraFinal();
     else {
-        Nodo<T> *aBorrar = iterador.nodo;
+        NodoListaDEnlazada<T> *aBorrar = iterador.nodo;
         aBorrar->anterior->siguiente = aBorrar->siguiente;
         aBorrar->siguiente->anterior = aBorrar->anterior;
         delete aBorrar;
@@ -320,7 +319,7 @@ void ListaDEnlazada<T>::borraFinal() {
         cola = nullptr;
     }
     else {
-        Nodo<T> *auxiliar = cola->anterior;
+        NodoListaDEnlazada<T> *auxiliar = cola->anterior;
         auxiliar->siguiente = nullptr;
         delete cola;
         cola = auxiliar;

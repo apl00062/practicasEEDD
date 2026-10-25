@@ -1,19 +1,19 @@
 #ifndef PRACTICACPP_ITERADOR_H
 #define PRACTICACPP_ITERADOR_H
 
-#include "Nodo.h"
+#include "NodoListaDEnlazada.h"
 
 template<class T>
 class ListaDEnlazada;
 
 template<class T>
 class Iterador {
-    Nodo<T> *nodo;
+    NodoListaDEnlazada<T> *nodo;
     friend class ListaDEnlazada<T>;
 
 public:
     /// Constructores: Parametrizado
-    Iterador(Nodo<T> *nodo) {this->nodo = nodo;}
+    Iterador(NodoListaDEnlazada<T> *nodo) {this->nodo = nodo;}
 
     bool hayAnterior() { return nodo->anterior != nullptr; }
     bool haySiguiente() { return nodo->siguiente != nullptr; }

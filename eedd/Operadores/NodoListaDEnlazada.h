@@ -4,13 +4,13 @@
 
 
 template<class T>
-class Nodo {
+class NodoListaDEnlazada {
 public:
     T dato;
-    Nodo *anterior, *siguiente;
+    NodoListaDEnlazada *anterior, *siguiente;
 
     /// Constructor: Paremetrizado
-    Nodo(T &dato, Nodo *anterior, Nodo *siguiente) {
+    NodoListaDEnlazada(T &dato, NodoListaDEnlazada *anterior, NodoListaDEnlazada *siguiente) {
         this->dato = dato;
         this->anterior = anterior;
         this->siguiente = siguiente;
