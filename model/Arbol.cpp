@@ -54,6 +54,11 @@ float Arbol::getAltura() const {
     return this->altura;
 }
 
+std::string Arbol::getAssetNum() const
+{
+    return this->assetNum;
+}
+
 std::string Arbol::getCodigoEspecie() const{
     return especie->getCodigoEspecie();
 }

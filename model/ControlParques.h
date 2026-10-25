@@ -7,12 +7,15 @@
 
 #include "../eedd/VDinamico.h"
 #include "../eedd/ListaDEnlazada.h"
+#include "../eedd/AVL.h"
 #include "Especie.h"
+
 #include "Parque.h"
 
 class ControlParques {
     VDinamico<Especie>* especies;
     ListaDEnlazada<Parque>* parques;
+    AVL<Arbol>* arboles;
 
 public:
     /// Constructores: Por defecto y Parametrizado
@@ -24,18 +27,6 @@ public:
     unsigned int getTamParques () { return parques->getTamLista(); }
     Parque* getParque(unsigned int id);
     Especie* getEspecie(unsigned int posicion);
-
-
-
-    /**
-     * Se encarga de enlazar la especie con el parque que la contiene.
-     *
-     * \param especie
-     *      Especie que queremos enlazar con el parque.
-     * \param parque
-     *      Parque al que queremos asignarle la especie.
-     */
-    void asignarEspecieParque(const Especie& especie, Parque& parque) const;
 
 
     /**
@@ -63,6 +54,12 @@ public:
      *      Nombre del Parque que queremos buscar.
      */
     Parque* buscarParque(const std::string& nombreParque);
+
+    Arbol* buscarArbol(const std::string& asNum);
+    VDinamico<Arbol*> listadoArbolesParque(const std::string& nombreParque);
+    Arbol* arbolMasAlto();
+    int contarEspecies(const std::string& nombreParque);
+    int contarTipos();
 };
 
 

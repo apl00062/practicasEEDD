@@ -193,7 +193,7 @@ int VDinamico<T>::busquedaDicotomica(const T &dato) {
         if (this->vector[medio] == dato) {
             return medio;
         }
-        else if (this->vector[medio] < dato) {
+        if (this->vector[medio] < dato) {
             inferior = medio + 1;
         }
         else {

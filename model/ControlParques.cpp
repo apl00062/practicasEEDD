@@ -38,10 +38,6 @@ Especie* ControlParques::getEspecie(unsigned int posicion) {
     return &(*this->especies)[posicion];
 }
 
-void ControlParques::asignarEspecieParque(const Especie &especie, Parque &parque) const{
-    parque.insertarEspecie(especie);;
-}
-
 int ControlParques::contarEspecieParque(const std::string& nombreComun) {
     int contador = 0;
     Iterador<Parque> iterador = parques->getIterador();
@@ -74,4 +70,9 @@ Parque *ControlParques::buscarParque(const std::string& nombreParque) {
         iterador.aSiguiente();
     }
     return nullptr;
+}
+
+Arbol* ControlParques::buscarArbol(const std::string& asNum)
+{
+    
 }

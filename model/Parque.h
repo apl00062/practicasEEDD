@@ -36,6 +36,7 @@ class Parque {
         bool operator==(const Parque &original) const;
 
         // Utilidades
+        bool existeNombreComun(const std::string &nombreComun);
         void insertarArbol(const Arbol& arbol);
         const Arbol& getArbolMasAlto();
         int contarNumeroEspecies();

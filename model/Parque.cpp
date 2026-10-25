@@ -59,6 +59,16 @@ void Parque::insertarArbol(const Arbol& arbol) {
     arboles.insertar(arbol);
 }
 
+bool Parque::existeNombreComun(const std::string& nombreComun)
+{
+    for (int i = 0; i < this->arboles.getTamanioLogico(); ++i)
+    {
+        if (arboles[i].getNombreComun() == nombreComun)
+            return true;
+    }
+    return false;
+}
+
 int Parque::contarNumeroEspecies() {
     if (arboles.getTamanioLogico() <= 0)
         throw std::out_of_range("El vector de arboles esta vacio.");
