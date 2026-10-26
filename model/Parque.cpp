@@ -26,17 +26,20 @@ Parque::~Parque() {
 }
 
 
-int Parque::getCodigoParque() {
+int Parque::getCodigoParque() const {
     return this->codigoParque;
 }
 
 
-Arbol& Parque::getArbol(int posicion) {
-    return this->arboles[posicion];
+Arbol* Parque::getArbol(int posicion){
+    return &this->arboles[posicion];
 }
 
+unsigned int Parque::getNArboles() {
+    return this->arboles.getTamanioLogico();
+}
 
-std::string Parque::getNombreParque() {
+std::string Parque::getNombreParque() const{
     return this->nombreParque;
 }
 
@@ -101,7 +104,7 @@ int Parque::contarTiposPlantas() {
     return contador;
 }
 
-const Arbol& Parque::getArbolMasAlto() {
+Arbol* Parque::getArbolMasAlto() {
     if (arboles.getTamanioLogico() <= 0)
         throw std::out_of_range("El vector de arboles esta vacio.");
     float altura = 0;
@@ -112,7 +115,7 @@ const Arbol& Parque::getArbolMasAlto() {
             altura = this->arboles[i].getAltura();
         }
     }
-    return this->arboles[posicion];
+    return &this->arboles[posicion];
 }
 
 

@@ -24,9 +24,10 @@ class Parque {
         ~Parque();
 
         // Getters
-        int getCodigoParque();
-        std::string getNombreParque();
-        Arbol& getArbol(int posicion);
+        int getCodigoParque() const;
+        std::string getNombreParque() const;
+        Arbol* getArbol(int posicion);
+        unsigned int getNArboles ();
 
         // Setters
         void setCodigoParque(int codigoParque);
@@ -38,7 +39,7 @@ class Parque {
         // Utilidades
         bool existeNombreComun(const std::string &nombreComun);
         void insertarArbol(const Arbol& arbol);
-        const Arbol& getArbolMasAlto();
+        Arbol* getArbolMasAlto();
         int contarNumeroEspecies();
         int contarTiposPlantas();
 

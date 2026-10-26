@@ -59,6 +59,13 @@ std::string Arbol::getAssetNum() const
     return this->assetNum;
 }
 
+bool Arbol::operator<(const Arbol &original) const {
+    if (this->assetNum < original.getAssetNum())
+        return true;
+
+    return false;
+}
+
 std::string Arbol::getCodigoEspecie() const{
     return especie->getCodigoEspecie();
 }
@@ -67,6 +74,10 @@ std::string Arbol::getNombreComun() const{
     return especie->getNombreComun();
 }
 
-std::string Arbol::getTipoEspecie() const {
+std::string Arbol::getTipoPlanta() const {
     return especie->getTipoPlanta();
+}
+
+Especie *Arbol::getEspecie() const {
+    return this->especie;
 }

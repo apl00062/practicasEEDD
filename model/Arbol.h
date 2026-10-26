@@ -38,10 +38,13 @@ public:
     float getAltura() const;
     std::string getAssetNum() const;
 
+    bool operator<(const Arbol& original) const;
+
     /// Getters provenientes del puntero a especie
     std::string getCodigoEspecie() const;
-    std::string getTipoEspecie() const;
+    std::string getTipoPlanta() const;
     std::string getNombreComun() const ;
+    Especie* getEspecie() const;
 };
 
 

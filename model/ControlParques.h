@@ -20,14 +20,13 @@ class ControlParques {
 public:
     /// Constructores: Por defecto y Parametrizado
     ControlParques();
-    ControlParques(VDinamico<Especie> &especie, ListaDEnlazada<Parque> &parques);
+    ControlParques(VDinamico<Especie> &especie, ListaDEnlazada<Parque> &parques, AVL<Arbol> &arboles);
 
     /// Getters y Setters
     unsigned int getTamEspecies () { return especies->getTamanioLogico(); }
     unsigned int getTamParques () { return parques->getTamLista(); }
-    Parque* getParque(unsigned int id);
+    Parque* getParque(unsigned int id) const;
     Especie* getEspecie(unsigned int posicion);
-
 
     /**
     * Se encarga de contar los parque que tienen una especie dando como parámetro su nombre común.
@@ -35,7 +34,7 @@ public:
     * \param nombreComun
     *       Nombre de la especie que queremos buscar.
     */
-    int contarEspecieParque(const std::string &nombreComun);
+    int contarEspecieParque(const std::string &nombreComun) const;
 
 
     /**
@@ -44,7 +43,7 @@ public:
      * \param subCadena
      *      Subcadena del nombre cientifico de una especie.
      */
-    VDinamico<Especie*> listadoEspecieSubNombre(const std::string &subCadena);
+    VDinamico<Especie*> listadoEspecieSubNombre(const std::string &subCadena) const;
 
 
     /**
@@ -53,13 +52,13 @@ public:
      * \param nombreParque
      *      Nombre del Parque que queremos buscar.
      */
-    Parque* buscarParque(const std::string& nombreParque);
+    Parque* buscarParque(const std::string& nombreParque) const;
 
-    Arbol* buscarArbol(const std::string& asNum);
-    VDinamico<Arbol*> listadoArbolesParque(const std::string& nombreParque);
-    Arbol* arbolMasAlto();
-    int contarEspecies(const std::string& nombreParque);
-    int contarTipos();
+    Arbol* buscarArbol(const std::string& asNum) const;
+    VDinamico<Arbol*> listadoArbolesParque(const std::string& nombreParque) const;
+    Arbol* arbolMasAlto() const;
+    int contarEspecies(const std::string& nombreParque) const;
+    int contarTipos() const;
 };
 
 

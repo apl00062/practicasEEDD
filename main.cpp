@@ -7,10 +7,12 @@
 #include "io/LectorCSV.h"
 #include "eedd/ListaDEnlazada.h"
 #include "model/ControlParques.h"
+#include "eedd/AVL.h"
 
 
 const std::string RUTA_FICHERO_ESPECIES = "data/arbolado-especies.csv";
 const std::string RUTA_FICHERO_PARQUES = "data/parques.csv";
+const std::string RUTA_FICHERO_ARBOLES = "data/arboladoMadrid.csv";
 
 /**
  * @brief Función para encontrar las especies con nombre común no nulo
@@ -90,7 +92,7 @@ void imprimirPorPantalla(ListaDEnlazada<int> &enteros, int id, std::string titul
 /// ===================================================================================
 
 /// ======================== Operaciones para la prueba 2 de la Lista Doblemente Enlazada ===========================
-void enlazarParques(ControlParques &controlParques) {
+/**void enlazarParques(ControlParques &controlParques) {
     for (int i = 0; i < controlParques.getTamEspecies(); ++i) {
         if (controlParques.getEspecie(i)->getTipoPlanta() == "ARBUSTO" ||
             controlParques.getEspecie(i)->getTipoPlanta() == "CONIFERA" ||
@@ -109,7 +111,7 @@ void enlazarParques(ControlParques &controlParques) {
         }
     }
 }
-
+**/
 int main()
 {
     try
@@ -120,12 +122,14 @@ int main()
         VDinamico<Especie> vectorCompleto;
         ListaDEnlazada<int> enteros;
         ListaDEnlazada<Parque> listaParques;
+        AVL<Arbol> arbolArboles;
         Especie especie;
 
 
         if (!lector_csv.cargarVector(vectorCompletoPr1, RUTA_FICHERO_ESPECIES) ||
             !lector_csv.cargarLista(listaParques, RUTA_FICHERO_PARQUES) ||
-            !lector_csv.cargarVector(vectorCompleto, RUTA_FICHERO_ESPECIES))
+            !lector_csv.cargarVector(vectorCompleto, RUTA_FICHERO_ESPECIES) ||
+            !lector_csv.cargarArbol(arbolArboles, RUTA_FICHERO_ARBOLES))
         {
             std::cerr << "Error: no se pudo abrir el fichero '" << RUTA_FICHERO_ESPECIES << "'.\n";
             std::cerr << "Comprueba que ejecutas el programa desde la raiz del proyecto "
@@ -144,13 +148,15 @@ int main()
 
         int menuPrincipal = 0;
 
-        while (menuPrincipal < 3) {
+        while (menuPrincipal < 4) {
             int practica1 = 0;
             int practica2 = 0;
+            int practica3 = 0;
             std::cout << "--- ELEIGE LA ENTREGA QUE QUIERES COMPROBAR: ---" << std::endl
                 << " 1. Practica 1." << std::endl
                 << " 2. Practica 2." << std::endl
-                << " 3. Salir. " << std::endl;
+                << " 3. Practica 3." << std::endl
+                << " 4. Salir. " << std::endl;
             std::cin >> menuPrincipal;
             switch (menuPrincipal) {
                 case(1):
@@ -228,7 +234,7 @@ int main()
                             practica2 = 0;
                             std::cout << "--- Practica 2 ---" << std::endl
                                 << " 1. Prueba con Enteros. " << std::endl
-                                << " 2. Prueba con Control de Parques." << std::endl
+                                << " 2. Prueba con Control de Parques. (Ya no se puede acceder, las fuciones han cambiado)" << std::endl
                                 << " 3. Volver Atrás." << std::endl;
                             std::cin >> practica2;
                             switch (practica2) {
@@ -260,7 +266,7 @@ int main()
                                     imprimirPorPantalla(enteros, id, insertar);
                                     break;
                             }
-                                case (2):
+                                /**case (2):
                                     enlazarParques(controlParques);
 
                                     std::cout << "=== Prueba 1. Nombres Comunes ===" << std::endl;
@@ -324,11 +330,17 @@ int main()
                                     std::cout << "=== Prueba 5. Parques que contienen Abetos ===" << std::endl;
                                     std::cout << controlParques.contarEspecieParque("Abeto") << std::endl;
                                     break;
+                                    **/
                         }
                         break;
 
                     case(3):
-                        break;
+                        while (practica3 < 2) {
+
+                        }
+
+                    case(4):
+                         break;
                     }
                 }
             }

@@ -17,8 +17,8 @@ class AVL {
     void rotacionDerecha(NodoAVL<T>* &nodo);
     void rotacionIzquierda(NodoAVL<T>* &nodo);
 
-    void inordenAux(NodoAVL<T>* nodo, VDinamico<NodoAVL<T>*> &vector);
-    VDinamico<NodoAVL<T> *> inorden(NodoAVL<T>* nodo);
+    void inordenAux(NodoAVL<T>* nodo, VDinamico<T*> &vector);
+    VDinamico<T*> inorden(NodoAVL<T>* nodo);
     void preordenAux(NodoAVL<T>* nodo, VDinamico<NodoAVL<T>*> &vector);
     VDinamico<NodoAVL<T> *> preorden(NodoAVL<T>* nodo);
     void postordenAux(NodoAVL<T>* nodo, VDinamico<NodoAVL<T>*> &vector);
@@ -41,10 +41,10 @@ public:
     unsigned int getAltura() const { return this->raiz->altura; }
 
     /// Operadores
-    AVL<T> &operator=(const AVL &original);
+    AVL &operator=(const AVL &original);
 
     /// Recorridos: Inorden, preorden y postorden.
-    VDinamico<NodoAVL<T> *> inorden() { return inorden(raiz); }
+    VDinamico<T*> inorden() { return inorden(raiz); }
     VDinamico<NodoAVL<T> *> preorden() { return preorden(raiz); }
     VDinamico<NodoAVL<T> *> postorden() { return postorden(raiz); }
 
@@ -102,19 +102,19 @@ AVL<T>& AVL<T>::operator=(const AVL<T>& original)
 }
 
 template<typename T>
-void AVL<T>::inordenAux(NodoAVL<T> *nodo, VDinamico<NodoAVL<T> *> &vector){
+void AVL<T>::inordenAux(NodoAVL<T> *nodo, VDinamico<T*> &vector){
     if (nodo)
     {
-        inorden(nodo->izquierda, vector);
-        vector.insertar(nodo->dato);
-        inorden(nodo->derecha, vector);
+        inordenAux(nodo->izquierda, vector);
+        vector.insertar(&nodo->dato);
+        inordenAux(nodo->derecha, vector);
     }
 }
 
 template <typename T>
-VDinamico<NodoAVL<T>*> AVL<T>::inorden(NodoAVL<T>* nodo)
+VDinamico<T*> AVL<T>::inorden(NodoAVL<T>* nodo)
 {
-    VDinamico<NodoAVL<T>*> vector;
+    VDinamico<T*> vector;
     inordenAux(nodo, vector);
     return vector;
 }
@@ -125,8 +125,8 @@ void AVL<T>::preordenAux(NodoAVL<T>* nodo, VDinamico<NodoAVL<T>*> &vector)
     if (nodo)
     {
         vector.insertar(nodo);
-        preorden(nodo->izquierda, vector);
-        preorden(nodo->derecha, vector);
+        preordenAux(nodo->izquierda, vector);
+        preordenAux(nodo->derecha, vector);
     }
 }
 
@@ -134,23 +134,25 @@ template <typename T>
 VDinamico<NodoAVL<T>*> AVL<T>::preorden(NodoAVL<T>* nodo)
 {
     VDinamico<NodoAVL<T>*> vector;
-    inordenAux(nodo, vector);
+    preorden(nodo, vector);
     return vector;
 }
 
 template <typename T>
 void AVL<T>::postordenAux(NodoAVL<T>* nodo, VDinamico<NodoAVL<T>*> &vector)
 {
-    postorden(nodo->izquierda, vector);
-    postorden(nodo->derecha, vector);
-    vector.insertar(nodo);
+    if (nodo) {
+        postordenAux(nodo->izquierda, vector);
+        postordenAux(nodo->derecha, vector);
+        vector.insertar(nodo);
+    }
 }
 
 template <typename T>
 VDinamico<NodoAVL<T>*> AVL<T>::postorden(NodoAVL<T>* nodo)
 {
     VDinamico<NodoAVL<T>*> vector;
-    inordenAux(nodo, vector);
+    postordenAux(nodo, vector);
     return vector;
 }
 
