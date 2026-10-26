@@ -30,7 +30,7 @@ class AVL {
 
 public:
     /// Constructores: Por defecto y por copia
-    AVL() : raiz(nullptr), altura(0), nElementos(0) {}
+    AVL() : raiz(nullptr), nElementos(0) {}
     AVL(const AVL<T> &original);
 
     /// Destructor
@@ -38,6 +38,7 @@ public:
 
     /// Getters
     unsigned int getNumElementos() const { return this->nElementos; }
+    unsigned int getAltura() const { return this->raiz->altura; }
 
     /// Operadores
     AVL<T> &operator=(const AVL &original);
@@ -67,7 +68,7 @@ AVL<T>::~AVL()
 }
 
 template <typename T>
-AVL<T>::AVL(const AVL<T>& original)
+AVL<T>::AVL(const AVL& original)
 {
     VDinamico<NodoAVL<T> *> vector;
     vector = original.preorden();
@@ -155,16 +156,99 @@ VDinamico<NodoAVL<T>*> AVL<T>::postorden(NodoAVL<T>* nodo)
 
 template<typename T>
 bool AVL<T>::inserta(NodoAVL<T> *&nodo, T &dato) {
+    bool insertado = false;
     if (!nodo) {
-        nodo = new NodoAVL<T>(dato);
+        NodoAVL<T> *nuevoNodo = new NodoAVL<T>(dato);
+        nodo = nuevoNodo;
         return true;
     }
-    if (dato < nodo->dato)
-        return inserta(nodo->izquierda, dato);
-    if (dato > nodo->dato)
-        return inserta(nodo->derecha, dato);
 
-    return false;
+    if (nodo->dato == dato)
+        return false;
+
+    if (dato < nodo->dato) {
+        insertado = inserta(nodo->izquierda, dato);
+    }
+    if (dato > nodo->dato) {
+        insertado = inserta(nodo->derecha, dato);
+    }
+
+    if (!insertado)
+        return insertado;
+
+    if (insertado) {
+        const int izq = nodo->izquierda == nullptr ? -1 : nodo->izquierda->altura;
+        const int dcha = nodo->derecha == nullptr ? -1 : nodo->derecha->altura;
+        nodo->altura = 1 + std::max(izq,dcha);
+
+        nodo->balanceado = izq - dcha;
+
+        if (nodo->balanceado == 2) {
+            if (nodo->izquierda->balanceado >= 0) {
+                rotacionDerecha(nodo);
+            } else {
+                rotacionIzquierda(nodo->izquierda);
+                rotacionDerecha(nodo);
+            }
+        } else if (nodo->balanceado == -2) {
+            if (nodo->derecha->balanceado <= 0) {
+                rotacionIzquierda(nodo);
+            } else {
+                rotacionDerecha(nodo->derecha);
+                rotacionIzquierda(nodo);
+            }
+        }
+        ++nElementos;
+    }
+    return insertado;
+}
+
+template<typename T>
+void AVL<T>::rotacionIzquierda(NodoAVL<T> *&nodo) {
+    NodoAVL<T> *auxiliar = nodo;
+    NodoAVL<T> *auxiliar2 = auxiliar->derecha;
+    nodo = auxiliar2;
+
+    auxiliar->derecha = auxiliar2->izquierda;
+    auxiliar2->izquierda = auxiliar;
+
+    ++auxiliar->balanceado;
+
+    if (auxiliar2->balanceado < 0)
+        auxiliar->balanceado += -auxiliar2->balanceado;
+
+    ++auxiliar2->balanceado;
+
+    if (auxiliar->balanceado > 0)
+        auxiliar2->balanceado += auxiliar->balanceado;
+
+    const int izq = nodo->izquierda == nullptr ? -1 : nodo->izquierda->altura;
+    const int dcha = nodo->derecha == nullptr ? -1 : nodo->derecha->altura;
+    nodo->altura = 1 + std::max(izq,dcha);
+}
+
+template<typename T>
+void AVL<T>::rotacionDerecha(NodoAVL<T> *&nodo) {
+    NodoAVL<T> *auxiliar = nodo;
+    NodoAVL<T> *auxiliar2 = auxiliar->izquierda;
+    nodo = auxiliar2;
+
+    auxiliar->izquierda = auxiliar2->derecha;
+    auxiliar2->derecha = auxiliar;
+
+    --auxiliar->balanceado;
+
+    if (auxiliar2->balanceado > 0)
+        auxiliar->balanceado -= auxiliar2->balanceado;
+
+    --auxiliar2->balanceado;
+
+    if (auxiliar->balanceado < 0)
+        auxiliar2->balanceado += auxiliar->balanceado;
+
+    const int izq = nodo->izquierda == nullptr ? -1 : nodo->izquierda->altura;
+    const int dcha = nodo->derecha == nullptr ? -1 : nodo->derecha->altura;
+    nodo->altura = 1 + std::max(izq,dcha);
 }
 
 template <typename T>
