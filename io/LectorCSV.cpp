@@ -54,6 +54,64 @@ bool LectorCSV::cargarVector(VDinamico<Especie> &vector, const std::string& ruta
     return true;
 }
 
+bool LectorCSV::cargarArbol(AVL<Arbol> &arbol, const std::string& rutaFichero) {
+
+    filasDescartadas_ = 0;
+
+    std::ifstream fichero(rutaFichero);
+    if (!fichero.is_open()) {
+        return false;
+    }
+
+    std::string linea;
+    if (std::getline(fichero, linea)) {
+        eliminarBOM(linea);
+    }
+
+    //Declaradas fuera del bucle por eficiencia
+    std::string assetnum, numParque, numDistrito, nombDistrito, numBarrio, nombBarrio;
+    std::string x, y, codEspecie,especie, perimetro, alturaTotal;
+
+    while (std::getline(fichero, linea)) {
+        if (linea.empty()) {
+            continue;
+        }
+
+        if (contarCampos(linea) != 12) {
+            ++filasDescartadas_;
+            continue;
+        }
+
+
+        assetnum = extraerCampo(linea, 0);
+        numParque = extraerCampo(linea, 1);
+        numDistrito = extraerCampo(linea, 2);
+        nombDistrito = extraerCampo(linea, 3);
+        numBarrio = extraerCampo(linea, 4);
+        nombBarrio = extraerCampo(linea, 5);
+        x = extraerCampo(linea, 6);
+        y = extraerCampo(linea, 7);
+        codEspecie = extraerCampo(linea, 8);
+        especie = extraerCampo(linea, 9);
+        perimetro = extraerCampo(linea, 10);
+        alturaTotal = extraerCampo(linea, 11);
+
+        Arbol *aInsertar = new Arbol(assetnum, std::stoi(numParque),std::stoi(numDistrito),
+            nombDistrito, std::stoi(numBarrio),nombBarrio,std::stod(x),std::stod(y),
+            std::stof(perimetro),std::stof(alturaTotal));
+        for (int i = 0; i <)
+
+    }
+
+
+
+
+
+
+    numeroArboles_= arbol.getNumElementos();
+    return true;
+}
+
 /**
  * @brief Número de especies leídas correctamente.
  * @return Cantidad de especies mostradas durante la última llamada a cargar().

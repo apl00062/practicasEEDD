@@ -175,6 +175,8 @@ ListaDEnlazada<T> &ListaDEnlazada<T>::operator+(const ListaDEnlazada &original) 
     NodoListaDEnlazada<T> *nuevo = new NodoListaDEnlazada<T>(iteradorOriginal.dato(), iteradorOriginal.nodo->anterior, nullptr);
     iteradorThis.nodo->siguiente = nuevo;
     cola = nuevo;
+
+    return this;
 }
 
 template<typename T>
@@ -242,8 +244,8 @@ void ListaDEnlazada<T>::insertar(Iterador<T> &iterador, T &dato) {
         NodoListaDEnlazada<T>* nuevo = new NodoListaDEnlazada<T>(dato, iterador.nodo->anterior, iterador.nodo);
         iterador.nodo->anterior->siguiente = nuevo;
         iterador.nodo->anterior = nuevo;
+        ++nElementos;
     }
-    ++nElementos;
 }
 
 template<typename T>
