@@ -21,16 +21,15 @@
 // utiliza std::vector ni ninguna otra estructura de datos en ningún punto.
 class LectorCSV {
 public:
-    bool cargarVector(VDinamico<Especie*> &vector, const std::string& rutaFichero);
-    bool cargarLista(ListaDEnlazada<Parque*> &lista, const std::string& rutaFichero);
-    bool cargarArbol(AVL<Arbol*> &arbol, const std::string& rutaFichero);
+    bool cargarVector(VDinamico<Especie> &vector, const std::string& rutaFichero);
+    bool cargarLista(ListaDEnlazada<Parque> &lista, const std::string& rutaFichero, VDinamico<Arbol> &arboles);
+    bool cargarArbol(AVL<Arbol> &arbol, const std::string& rutaFichero, VDinamico<Especie> &especies);
 
     std::size_t numeroEspecies() const;
     std::size_t filasDescartadas() const;
     std::size_t numeroParques() const;
 
 private:
-    VDinamico<Especie*> vectorEspecie;
 
     std::size_t numeroEspecies_ = 0;
     std::size_t filasDescartadas_ = 0;

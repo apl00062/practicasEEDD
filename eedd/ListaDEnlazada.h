@@ -45,7 +45,7 @@ public:
      * \param dato
      *      Dato con el que crearemos el nodo.
     */
-    void insertaInicio(T& dato);
+    T* insertaInicio(T& dato);
 
     /**
      * Metodo que crea e inserta un nuevo nodo en el final de la lista, maneja todas las posibles casuisticas.
@@ -54,7 +54,7 @@ public:
      * \param dato
      *      Dato con el que crearemos el nodo.
     */
-    void insertaFinal(T &dato);
+    T* insertaFinal(T &dato);
 
     /**
      * Metodo que crea e inserta un nuevo nodo en el lugar donde el iterador apunte. Este metodo, primero llama a
@@ -69,7 +69,7 @@ public:
      * \exception
      *      Salta una excepcion, si el metodo comprabarIterador() devuelve null.
     */
-    void insertar(Iterador<T> &iterador, T& dato);
+    T* insertar(Iterador<T> &iterador, T& dato);
 
     /**
      * Metodo que borra el nodo al que apunta la cabecera, asignando la cabecera al nodo siguiente a la cabecera.
@@ -101,7 +101,7 @@ public:
     */
     void borrar(Iterador<T> &iterador);
 
-    void concatena(const ListaDEnlazada &original) { this+original; }
+    void concatena(const ListaDEnlazada &original) { return this+original; }
     T* buscarDato(T& dato);
 
 };
@@ -122,7 +122,7 @@ ListaDEnlazada<T>::ListaDEnlazada(const ListaDEnlazada &original) {
         while (iteradorOriginal.haySiguiente()) {
             NodoListaDEnlazada<T> *nuevo = new NodoListaDEnlazada<T>(iteradorOriginal.nodo->dato, iteradorOriginal.nodo->anterior,
                 iteradorOriginal.nodo->siguiente);
-            iteradorOriginal.nodo->siguiente = nuevo;
+            iteradorThis.nodo->siguiente = nuevo;
             iteradorOriginal.aSiguiente();
             iteradorThis.aSiguiente();
         }
@@ -212,7 +212,7 @@ bool ListaDEnlazada<T>::comprabarIterador(Iterador<T> &iterador) {
 }
 
 template<typename T>
-void ListaDEnlazada<T>::insertaInicio(T &dato) {
+T* ListaDEnlazada<T>::insertaInicio(T &dato) {
     if (cabecera == nullptr) {
         NodoListaDEnlazada<T> *nuevo = new NodoListaDEnlazada<T>(dato,nullptr,nullptr);
         cabecera = nuevo;
@@ -229,10 +229,11 @@ void ListaDEnlazada<T>::insertaInicio(T &dato) {
         cabecera = nuevo;
     }
     ++nElementos;
+    return &dato;
 }
 
 template<typename T>
-void ListaDEnlazada<T>::insertar(Iterador<T> &iterador, T &dato) {
+T* ListaDEnlazada<T>::insertar(Iterador<T> &iterador, T &dato) {
     if (!comprabarIterador(iterador))
         throw std::invalid_argument("El iterador no apunta a ningun elemento de esta lista.");
     if (cabecera == iterador.nodo)
@@ -246,11 +247,12 @@ void ListaDEnlazada<T>::insertar(Iterador<T> &iterador, T &dato) {
         iterador.nodo->anterior->siguiente = nuevo;
         iterador.nodo->anterior = nuevo;
         ++nElementos;
+        return &dato;
     }
 }
 
 template<typename T>
-void ListaDEnlazada<T>::insertaFinal(T &dato) {
+T* ListaDEnlazada<T>::insertaFinal(T &dato) {
     if (cabecera == nullptr) {
         NodoListaDEnlazada<T> *nuevo = new NodoListaDEnlazada<T>(dato, nullptr, nullptr);
         cabecera = nuevo;
@@ -267,6 +269,7 @@ void ListaDEnlazada<T>::insertaFinal(T &dato) {
         cola = nuevo;
     }
     ++nElementos;
+    return &dato;
 }
 
 template<typename T>
@@ -274,8 +277,6 @@ void ListaDEnlazada<T>::borraInicio() {
     if (cabecera == nullptr)
         throw std::out_of_range("La lista esta vacia.");
     if (cabecera == cola) {
-        if constexpr (std::is_pointer_v<T>)
-            delete cabecera->dato;
 
         delete cabecera;
         cabecera = nullptr;
@@ -284,9 +285,6 @@ void ListaDEnlazada<T>::borraInicio() {
     else {
         NodoListaDEnlazada<T> *auxiliar = cabecera->siguiente;
         auxiliar->anterior = nullptr;
-
-        if constexpr (std::is_pointer_v<T>)
-            delete cabecera->dato;
 
         delete cabecera;
         cabecera = auxiliar;
@@ -314,9 +312,6 @@ void ListaDEnlazada<T>::borrar(Iterador<T> &iterador) {
         aBorrar->anterior->siguiente = aBorrar->siguiente;
         aBorrar->siguiente->anterior = aBorrar->anterior;
 
-        if constexpr (std::is_pointer_v<T>)
-            delete aBorrar->dato;
-
         delete aBorrar;
 
         --nElementos;
@@ -330,9 +325,6 @@ void ListaDEnlazada<T>::borraFinal() {
         throw std::out_of_range("La lista esta vacia.");
     if (cabecera == cola) {
 
-        if constexpr (std::is_pointer_v<T>)
-            delete cola->dato;
-
         delete cola;
         cabecera = nullptr;
         cola = nullptr;
@@ -340,9 +332,6 @@ void ListaDEnlazada<T>::borraFinal() {
     else {
         NodoListaDEnlazada<T> *auxiliar = cola->anterior;
         auxiliar->siguiente = nullptr;
-
-        if constexpr (std::is_pointer_v<T>)
-            delete cola->dato;
 
         delete cola;
         cola = auxiliar;

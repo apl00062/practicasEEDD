@@ -10,9 +10,6 @@
 #include "eedd/AVL.h"
 
 
-const std::string RUTA_FICHERO_ESPECIES = "data/arbolado-especies.csv";
-const std::string RUTA_FICHERO_PARQUES = "data/parques.csv";
-const std::string RUTA_FICHERO_ARBOLES = "data/arboladoMadrid.csv";
 
 /**
  * @brief Función para encontrar las especies con nombre común no nulo
@@ -20,6 +17,7 @@ const std::string RUTA_FICHERO_ARBOLES = "data/arboladoMadrid.csv";
  * @return VDinámico de punteros a especies en el VDinámico completo
  *          que no tienen nombre común nulo
  */
+/**
 VDinamico<Especie*> getEspNComun(VDinamico<Especie*>& vEspecies)
 {
     VDinamico<Especie*> vectorEspNComun;
@@ -92,7 +90,7 @@ void imprimirPorPantalla(ListaDEnlazada<int> &enteros, int id, std::string titul
 /// ===================================================================================
 
 /// ======================== Operaciones para la prueba 2 de la Lista Doblemente Enlazada ===========================
-/**void enlazarParques(ControlParques &controlParques) {
+void enlazarParques(ControlParques &controlParques) {
     for (int i = 0; i < controlParques.getTamEspecies(); ++i) {
         if (controlParques.getEspecie(i)->getTipoPlanta() == "ARBUSTO" ||
             controlParques.getEspecie(i)->getTipoPlanta() == "CONIFERA" ||
@@ -117,10 +115,9 @@ int main()
     try
     {
         //INSTANCIAR Y MOSTRAR EL VECTOR DE Especies
-        LectorCSV lector_csv;
-        VDinamico<Especie*> especies;
-        ListaDEnlazada<Parque*> parques;
-        AVL<Arbol*> arboles;
+        VDinamico<Especie> especies;
+        ListaDEnlazada<Parque> parques;
+        AVL<Arbol> arboles;
 
 
         if (!lector_csv.cargarLista(parques, RUTA_FICHERO_PARQUES) ||
@@ -132,13 +129,62 @@ int main()
                          "(o revisa el Working Directory en la configuracion de ejecucion).\n";
             return 1;
         }
-        std::cout << "Numero de Especies cargados: " << especies.getTamanioLogico() << std::endl
+        std::cout << "-- EJERCICIO N1 --" << std::endl
+                  << "Numero de Especies cargados: " << especies.getTamanioLogico() << std::endl
                   << "Numero de Parques cargados: " << parques.getTamLista() << std::endl
                   << "Numero de Arboles cargados: "  << arboles.getNumElementos() << std::endl
-                  << "Altura del árbol AVL: " << arboles.getAltura() << std::endl;
+                  << "Altura del árbol AVL: " << arboles.getAltura() << std::endl << std::endl;
+
+        //arboles.busquedaIterativa("90");
 
 
         ControlParques controlParques(especies, parques, arboles);
+        Arbol* aMostrar1 = controlParques.buscarArbol("9850684");
+        Arbol* aMostrar2 = controlParques.buscarArbol("5702331");
+        Arbol* aMostrar3 = controlParques.buscarArbol("5697360");
+        Arbol* aMostrar4 = controlParques.buscarArbol("0000000");
+
+        std::cout << "-- EJERCICIO N2 --" << std::endl;
+        if (aMostrar1 == nullptr)
+            std::cout << "El arbol 9850684 no existe. " << std::endl;
+        else {
+            std::cout << "El arbol 9850684 existe, y tiene los siguientes atributos: " << std::endl
+                      << "Identificador: " << aMostrar1->getAssetNum() << std::endl
+                      << "Codigo del Parque: " << aMostrar1->getCodigoParque() << std::endl
+                      << "Nombre común: " << aMostrar1->getNombreComun() << std::endl
+                      << "Nombre científico: " << aMostrar1->getNombreCientifico() << std::endl
+                      << "Tipo de Planta: " << aMostrar1->getTipoPlanta() << std::endl;
+        }
+        if (aMostrar2 == nullptr)
+            std::cout << "El arbol 5702331 no existe. " << std::endl;
+        else {
+            std::cout << "El arbol 5702331 existe, y tiene los siguientes atributos: " << std::endl
+                      << "Identificador: " << aMostrar2->getAssetNum() << std::endl
+                      << "Codigo del Parque: " << aMostrar2->getCodigoParque() << std::endl
+                      << "Nombre común: " << aMostrar2->getNombreComun() << std::endl
+                      << "Nombre científico: " << aMostrar2->getNombreCientifico() << std::endl
+                      << "Tipo de Planta: " << aMostrar2->getTipoPlanta() << std::endl;
+        }
+        if (aMostrar3 == nullptr)
+            std::cout << "El arbol 5697360 no existe. " << std::endl;
+        else {
+            std::cout << "El arbol 5697360 existe, y tiene los siguientes atributos: " << std::endl
+                      << "Identificador: " << aMostrar3->getAssetNum() << std::endl
+                      << "Codigo del Parque: " << aMostrar3->getCodigoParque() << std::endl
+                      << "Nombre común: " << aMostrar3->getNombreComun() << std::endl
+                      << "Nombre científico: " << aMostrar3->getNombreCientifico() << std::endl
+                      << "Tipo de Planta: " << aMostrar3->getTipoPlanta() << std::endl;
+        }
+        if (aMostrar4 == nullptr)
+            std::cout << "El arbol 0000000 no existe. " << std::endl;
+        else {
+            std::cout << "El arbol 0000000 existe, y tiene los siguientes atributos: " << std::endl
+                      << "Identificador: " << aMostrar4->getAssetNum() << std::endl
+                      << "Codigo del Parque: " << aMostrar4->getCodigoParque() << std::endl
+                      << "Nombre común: " << aMostrar4->getNombreComun() << std::endl
+                      << "Nombre científico: " << aMostrar4->getNombreCientifico() << std::endl
+                      << "Tipo de Planta: " << aMostrar4->getTipoPlanta() << std::endl;
+        }
 /**
         int menuPrincipal = 0;
 
@@ -188,7 +234,7 @@ int main()
                                 break;
 
                             case(3):
-                                /**Busqueda de posición de codigos de especies
+                                Busqueda de posición de codigos de especies
                                 std::cout<<"==================================================="<< std::endl;
                                 std::cout << "Posición de códigos de especies: " << std::endl;
                                 int posicion;
@@ -261,7 +307,7 @@ int main()
                                     imprimirPorPantalla(enteros, id, insertar);
                                     break;
                             }
-                                /**case (2):
+                                case (2):
                                     enlazarParques(controlParques);
 
                                     std::cout << "=== Prueba 1. Nombres Comunes ===" << std::endl;

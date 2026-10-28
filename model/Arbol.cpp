@@ -88,3 +88,11 @@ std::string Arbol::getTipoPlanta() const {
 Especie *Arbol::getEspecie() const {
     return this->especie;
 }
+
+int Arbol::getCodigoParque() const {
+    return this->numParque;
+}
+
+std::string Arbol::getNombreCientifico() const {
+    return this->especie->getNombreCientfico();
+}

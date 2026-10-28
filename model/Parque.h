@@ -12,16 +12,16 @@
 class Parque {
         int codigoParque;
         std::string nombreParque;
-        VDinamico<Arbol> arboles;
+        VDinamico<Arbol*> arboles;
 
     public:
         // Constructores
-        Parque();
+        Parque() = default;
         Parque(int codigoParque, const  std::string &nombreParque);
         Parque(const Parque& original);
 
         // Destructor
-        ~Parque();
+        ~Parque() = default;
 
         // Getters
         int getCodigoParque() const;
@@ -30,15 +30,15 @@ class Parque {
         unsigned int getNArboles ();
 
         // Setters
-        void setCodigoParque(int codigoParque);
-        void setNombreParque (std::string nombreParque);
+        void setCodigoParque(int codParque);
+        void setNombreParque (const std::string &nomParque);
 
         // Operadores
         bool operator==(const Parque &original) const;
 
         // Utilidades
         bool existeNombreComun(const std::string &nombreComun);
-        void insertarArbol(const Arbol& arbol);
+        void insertarArbol(Arbol* arbol);
         Arbol* getArbolMasAlto();
         int contarNumeroEspecies();
         int contarTiposPlantas();

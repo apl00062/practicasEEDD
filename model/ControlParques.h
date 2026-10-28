@@ -8,23 +8,23 @@
 #include "../eedd/VDinamico.h"
 #include "../eedd/ListaDEnlazada.h"
 #include "../eedd/AVL.h"
+#include "../io/LectorCSV.h"
 #include "Especie.h"
 
 #include "Parque.h"
 
 class ControlParques {
-    VDinamico<Especie*>* especies;
-    ListaDEnlazada<Parque*>* parques;
-    AVL<Arbol*>* arboles;
+    VDinamico<Especie> especies;
+    ListaDEnlazada<Parque> parques;
+    AVL<Arbol> arboles;
 
 public:
-    /// Constructores: Por defecto y Parametrizado
-    ControlParques();
-    ControlParques(VDinamico<Especie*> &especie, ListaDEnlazada<Parque*> &parques, AVL<Arbol*> &arboles);
+    /// Constructor
+    ControlParques(LectorCSV &lector_csv);
 
     /// Getters y Setters
-    unsigned int getTamEspecies () { return especies->getTamanioLogico(); }
-    unsigned int getTamParques () { return parques->getTamLista(); }
+    unsigned int getTamEspecies () { return especies.getTamanioLogico(); }
+    unsigned int getTamParques () { return parques.getTamLista(); }
     Parque* getParque(unsigned int id) const;
     Especie* getEspecie(unsigned int posicion);
 

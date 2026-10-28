@@ -13,21 +13,21 @@ class VDinamico {
 
         /**
          * Metodo que, dado un número, en este caso el tamaño lógico, devuelve la siguiente potencia mayor.
-         * \param tamLogico
+         * \param tamLogic
          *      Tamaño lógico del vector actual.
          * \return
          *      Devuelve la potencia de 2 calculada.
         */
-        unsigned int potenciaDeDos(unsigned int tamLogico);
+        unsigned int potenciaDeDos(unsigned int tamLogic);
 
         /**
          * Metodo que, si el tamaño lógico del vector es mayor que el tamaño físico, amplia el tamaño del vector. LLama
          * al metodo potencidDeDos() para hallar el nuevo tamaño, crea un nuevo vector con este tamaño y borra el vector
          * anterior.
-         * \param tamLogico
+         * \param tamLogic
          *      Tamaño logico del vector actual.
         */
-        void aumentarTamVector(unsigned int tamLogico);
+        void aumentarTamVector(unsigned int tamLogic);
 
 
     public:
@@ -56,7 +56,7 @@ class VDinamico {
          * \param posicon
          *      Posicion en la que queremos insertar el dato, si no hay valor, lo insertará al final.
         */
-        void insertar(const T& dato, unsigned int posicion = UINT_MAX);
+        void insertar(T& dato, unsigned int posicion = UINT_MAX);
 
         /**
          * Metodo que disminuye el tamaño lógico en 1, sabiendo que en la siguiente insercción el dato se sobreescribirá

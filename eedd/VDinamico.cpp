@@ -2,7 +2,6 @@
 #include "VDinamico.h"
 #include <algorithm>
 #include <stdexcept>
-#include <iostream>
 
 template<typename T>
 VDinamico<T>::VDinamico() {
@@ -16,6 +15,8 @@ VDinamico<T>::VDinamico(unsigned int tamLogico, T &dato) {
     if (tamLogico < 1) {
         throw std::invalid_argument("El tamanio logico tiene que ser mayor que 0.");
     }
+    this->tamLogico = 0;
+    this->tamFisico = 1;
     aumentarTamVector(tamLogico);
     for (int i = 0; i < tamLogico; ++i) {
         this->vector[i] = dato;
@@ -73,11 +74,6 @@ template<typename T>
 VDinamico<T>::~VDinamico() {
     this->tamLogico = 0;
     this->tamFisico = 0;
-    if constexpr (std::is_pointer_v<T>)
-    {
-        for (int i = 0; i < this->tamLogico; ++i)
-            delete this->vector[i];
-    }
 
     delete [] this->vector;
 }
@@ -107,9 +103,9 @@ bool VDinamico<T>::operator==(const VDinamico &original) {
 
 
 template<typename T>
-unsigned int VDinamico<T>::potenciaDeDos(unsigned int tamLogico) {
-    unsigned int tamanio = tamLogico * 2;
-    while (tamLogico > tamanio) {
+unsigned int VDinamico<T>::potenciaDeDos(const unsigned int tamLogic) {
+    unsigned int tamanio = tamLogic * 2;
+    while (tamLogic > tamanio) {
         tamanio *= 2;
     }
 
@@ -122,23 +118,23 @@ unsigned int VDinamico<T>::potenciaDeDos(unsigned int tamLogico) {
 
 
 template<typename T>
-void VDinamico<T>::aumentarTamVector(unsigned int tamLogico) {
-    if (tamLogico >= this->tamFisico) {
-    unsigned int nuevoTamanio = potenciaDeDos(tamLogico);
+void VDinamico<T>::aumentarTamVector(const unsigned int tamLogic) {
+    if (tamLogic >= this->tamFisico) {
+    unsigned int nuevoTamanio = potenciaDeDos(tamLogic);
     T* nuevoVector = new T[nuevoTamanio];
     for (int i = 0; i < this->tamLogico; ++i) {
         nuevoVector[i] = this->vector[i];
     }
     delete [] this->vector;
     this->vector = nuevoVector;
-    this->tamLogico = tamLogico;
+    this->tamLogico = tamLogic;
     this->tamFisico = nuevoTamanio;
     }
 }
 
 
 template<typename T>
-void VDinamico<T>::insertar(const T &dato, unsigned int posicion) {
+void VDinamico<T>::insertar(T &dato, unsigned int posicion) {
     if (posicion > this->tamLogico && posicion != UINT_MAX) {
         throw std::out_of_range("La posicion tiene que encontrarse dentro del tamanio logico");
     }
@@ -174,10 +170,6 @@ T& VDinamico<T>::eliminar(unsigned int posicion) {
     for (unsigned int i = posicion; i < this->tamLogico - 1; ++i)
         this->vector[i] = this->vector[i+1];
 
-
-    if constexpr (std::is_pointer_v<T>)
-        delete this[posicion];
-
     --this->tamLogico;
 
     return dato;
@@ -196,10 +188,9 @@ int VDinamico<T>::busquedaDicotomica(const T &dato) {
     ordenar();
     int inferior = 0;
     int superior = this->tamLogico-1;
-    int medio;
 
     while (inferior <= superior) {
-        medio = (inferior + superior) / 2;
+        int medio = (inferior + superior) / 2;
         if (this->vector[medio] == dato) {
             return medio;
         }

@@ -24,7 +24,7 @@ class AVL {
     void postordenAux(NodoAVL<T>* nodo, VDinamico<NodoAVL<T>*> &vector);
     VDinamico<NodoAVL<T> *> postorden(NodoAVL<T>* nodo);
 
-    T* busquedaRecursiva(T &dato, const NodoAVL<T> *nodo);
+    T* busquedaRecursiva(T &dato, NodoAVL<T> *nodo);
     T* busquedaIterativa(T &dato, NodoAVL<T> *nodo);
 
 
@@ -38,7 +38,7 @@ public:
 
     /// Getters
     unsigned int getNumElementos() const { return this->nElementos; }
-    unsigned int getAltura() const { return this->raiz->altura; }
+    unsigned int getAltura() const;
 
     /// Operadores
     AVL &operator=(const AVL &original);
@@ -62,24 +62,26 @@ AVL<T>::~AVL()
     VDinamico<NodoAVL<T> *> vector;
     vector = postorden();
     for (int i = 0; i < vector.getTamanioLogico(); ++i)
-    {
-        if constexpr (std::is_pointer_v<T>)
-            delete vector[i]->dato;
-
         delete vector[i];
-    }
 }
 
 template <typename T>
 AVL<T>::AVL(const AVL& original)
 {
-    VDinamico<NodoAVL<T> *> vector;
-    vector = original.preorden();
+    raiz = nullptr;
+    nElementos = 0;
 
+    VDinamico<NodoAVL<T> *> vector = original.preorden();
     for (int i = 0; i < vector.getTamanioLogico(); ++i)
         bool aux = this->inserta(vector[i]->dato);
+}
 
-    this->nElementos = original.nElementos;
+template<typename T>
+unsigned int AVL<T>::getAltura() const {
+    if (raiz == nullptr)
+        throw std::invalid_argument("El AVL está vacío.");
+
+    return raiz->altura;
 }
 
 template <typename T>
@@ -96,10 +98,11 @@ AVL<T>& AVL<T>::operator=(const AVL<T>& original)
     for (int i = 0; i < vector.getTamanioLogico(); ++i)
         delete vector[i];
 
+    raiz = nullptr;
+    nElementos = 0;
     for (int i = 0; i < vectorOriginal.getTamanioLogico(); ++i)
         bool aux = this->inserta(vectorOriginal[i]->dato);
 
-    this->nElementos = original.nElementos;
 
     return *this;
 }
@@ -137,7 +140,7 @@ template <typename T>
 VDinamico<NodoAVL<T>*> AVL<T>::preorden(NodoAVL<T>* nodo)
 {
     VDinamico<NodoAVL<T>*> vector;
-    preorden(nodo, vector);
+    preordenAux(nodo, vector);
     return vector;
 }
 
@@ -169,10 +172,10 @@ bool AVL<T>::inserta(NodoAVL<T> *&nodo, T &dato) {
         return true;
     }
 
-    if (*nodo->dato == *dato)
+    if (nodo->dato == dato)
         return false;
 
-    if (*dato < *nodo->dato) {
+    if (dato < nodo->dato) {
         insertado = inserta(nodo->izquierda, dato);
     } else {
         insertado = inserta(nodo->derecha, dato);
@@ -279,17 +282,18 @@ T* AVL<T>::busquedaIterativa(T& dato, NodoAVL<T> *nodo)
 }
 
 template <typename T>
-T* AVL<T>::busquedaRecursiva(T& dato, const NodoAVL<T> *nodo)
+T* AVL<T>::busquedaRecursiva(T& dato, NodoAVL<T> *nodo)
 {
+    if (nodo == nullptr)
+        return nullptr;
     if (dato == nodo->dato)
         return &nodo->dato;
     if (dato < nodo->dato)
-        return busquedaIterativa(dato, nodo->izquierda);
+        return busquedaRecursiva(dato, nodo->izquierda);
     if (nodo->dato < dato)
-        return busquedaIterativa(dato, nodo->derecha);
+        return busquedaRecursiva(dato, nodo->derecha);
 
     return nullptr;
-
 }
 
 #endif //PRACTICACPP_AVL_H

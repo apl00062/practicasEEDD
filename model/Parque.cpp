@@ -4,11 +4,6 @@
 
 #include "Parque.h"
 
-Parque::Parque() {
-    arboles = VDinamico<Arbol>();
-}
-
-
 Parque::Parque(int codigoParque, const std::string &nombreParque) {
     this->codigoParque = codigoParque;
     this->nombreParque = nombreParque;
@@ -22,17 +17,13 @@ Parque::Parque(const Parque &original) {
 }
 
 
-Parque::~Parque() {
-}
-
-
 int Parque::getCodigoParque() const {
     return this->codigoParque;
 }
 
 
 Arbol* Parque::getArbol(int posicion){
-    return &this->arboles[posicion];
+    return this->arboles[posicion];
 }
 
 unsigned int Parque::getNArboles() {
@@ -44,13 +35,13 @@ std::string Parque::getNombreParque() const{
 }
 
 
-void Parque::setCodigoParque(int codigoParque) {
-    this->codigoParque = codigoParque;
+void Parque::setCodigoParque(int codParque) {
+    this->codigoParque = codParque;
 }
 
 
-void Parque::setNombreParque(std::string nombreParque) {
-    this->nombreParque = nombreParque;
+void Parque::setNombreParque(const std::string& nomParque) {
+    this->nombreParque = nomParque;
 }
 
 
@@ -58,7 +49,7 @@ bool Parque::operator==(const Parque &original) const{
     return this->codigoParque == original.codigoParque;
 }
 
-void Parque::insertarArbol(const Arbol& arbol) {
+void Parque::insertarArbol(Arbol* arbol) {
     arboles.insertar(arbol);
 }
 
@@ -66,7 +57,7 @@ bool Parque::existeNombreComun(const std::string& nombreComun)
 {
     for (int i = 0; i < this->arboles.getTamanioLogico(); ++i)
     {
-        if (arboles[i].getNombreComun() == nombreComun)
+        if (arboles[i]->getNombreComun() == nombreComun)
             return true;
     }
     return false;
@@ -79,9 +70,10 @@ int Parque::contarNumeroEspecies() {
     VDinamico<std::string> especies;
     for (int i = 0; i < this->arboles.getTamanioLogico(); ++i) {
         for (int j = 0; j < especies.getTamanioLogico(); ++j) {
-            if (this->arboles[i].getCodigoEspecie() != especies[j]) {
+            if (this->arboles[i]->getCodigoEspecie() != especies[j]) {
                 contador++;
-                especies.insertar(this->arboles[i].getCodigoEspecie());
+                std::string aInsertar = this->arboles[i]->getCodigoEspecie();
+                especies.insertar(aInsertar);
             }
         }
     }
@@ -95,9 +87,10 @@ int Parque::contarTiposPlantas() {
     VDinamico<std::string> plantas;
     for (int i = 0; i < this->arboles.getTamanioLogico(); ++i) {
         for (int j = 0; j < plantas.getTamanioLogico(); ++j) {
-            if (this->arboles[i].getTipoPlanta() != plantas[j]) {
+            if (this->arboles[i]->getTipoPlanta() != plantas[j]) {
                 contador++;
-                plantas.insertar(this->arboles[i].getTipoPlanta());
+                std::string aInsertar = this->arboles[i]->getTipoPlanta();
+                plantas.insertar(aInsertar);
             }
         }
     }
@@ -110,12 +103,12 @@ Arbol* Parque::getArbolMasAlto() {
     float altura = 0;
     int posicion = 0;
     for (int i = 0; i < this->arboles.getTamanioLogico(); ++i) {
-        if (altura < this->arboles[i].getAltura()) {
+        if (altura < this->arboles[i]->getAltura()) {
             posicion = i;
-            altura = this->arboles[i].getAltura();
+            altura = this->arboles[i]->getAltura();
         }
     }
-    return &this->arboles[posicion];
+    return this->arboles[posicion];
 }
 
 

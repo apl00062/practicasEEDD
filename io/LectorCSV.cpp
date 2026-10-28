@@ -16,7 +16,7 @@
  * @param rutaFichero Ruta del fichero CSV a leer.
  * @return true si el fichero se ha podido abrir, false en caso contrario.
  */
-bool LectorCSV::cargarVector(VDinamico<Especie*> &vector, const std::string& rutaFichero) {
+bool LectorCSV::cargarVector(VDinamico<Especie> &vector, const std::string& rutaFichero) {
 
     filasDescartadas_ = 0;
 
@@ -47,17 +47,15 @@ bool LectorCSV::cargarVector(VDinamico<Especie*> &vector, const std::string& rut
         nombreComun = extraerCampo(linea, 1);
         nombreCientifico = extraerCampo(linea, 2);
         tipoPlanta = extraerCampo(linea, 3);
-        Especie *aInsertar = new Especie(codigo,nombreComun,nombreCientifico,tipoPlanta);
+        Especie aInsertar = Especie(codigo,nombreComun,nombreCientifico,tipoPlanta);
         vector.insertar(aInsertar);
-        vectorEspecie.insertar(aInsertar);
-
     }
 
     numeroEspecies_= vector.getTamanioLogico();
     return true;
 }
 
-bool LectorCSV::cargarArbol(AVL<Arbol*> &arbol, const std::string& rutaFichero) {
+bool LectorCSV::cargarArbol(AVL<Arbol> &arbol, const std::string& rutaFichero, VDinamico<Especie> &especies) {
 
     filasDescartadas_ = 0;
 
@@ -75,7 +73,7 @@ bool LectorCSV::cargarArbol(AVL<Arbol*> &arbol, const std::string& rutaFichero) 
     std::string assetnum, numParque, numDistrito, nombDistrito, numBarrio, nombBarrio;
     std::string x, y, codEspecie, perimetro, alturaTotal;
 
-    int contador = 0;
+
     while (std::getline(fichero, linea)) {
 
         if (!linea.empty() && linea.back() == '\r') {
@@ -98,7 +96,6 @@ bool LectorCSV::cargarArbol(AVL<Arbol*> &arbol, const std::string& rutaFichero) 
         int nParque = std::stoi(numParque);
         numDistrito = extraerCampoArbol(linea, 2);
         int nDistrito = std::stoi(numDistrito);
-
         nombDistrito = extraerCampoArbol(linea, 3);
         numBarrio = extraerCampoArbol(linea, 4);
         int nBarrio = std::stoi(numBarrio);
@@ -122,21 +119,21 @@ bool LectorCSV::cargarArbol(AVL<Arbol*> &arbol, const std::string& rutaFichero) 
         float perim = std::stof(perimetro);
         float altura = std::stof(alturaTotal);
 
-        Arbol *aInsertar = new Arbol(assetnum, nParque,nDistrito,nombDistrito, nBarrio,
+        Arbol aInsertar = Arbol(assetnum, nParque,nDistrito,nombDistrito, nBarrio,
             nombBarrio,fx,fy,perim,altura);
-        for (int i = 0; i < numeroEspecies(); ++i)
+        for (int i = 0; i < this->numeroEspecies_; ++i)
         {
-            if (vectorEspecie[i]->getCodigoEspecie() == codEspecie)
+
+            if (especies[i].getCodigoEspecie() == codEspecie)
             {
-                aInsertar->setEspecie(vectorEspecie[i]);
+                aInsertar.setEspecie(&especies[i]);
                 break;
             }
         }
         arbol.inserta(aInsertar);
-        ++contador;
+
     }
 
-    std::cout << contador << std::endl;
     numeroArboles_= arbol.getNumElementos();
     return true;
 }
@@ -278,7 +275,7 @@ void LectorCSV::mostrarEspecie(const Especie& especie) {
 }
 
 
-bool LectorCSV::cargarLista(ListaDEnlazada<Parque*> &lista, const std::string& rutaFichero) {
+bool LectorCSV::cargarLista(ListaDEnlazada<Parque> &lista, const std::string& rutaFichero, VDinamico<Arbol> &arboles) {
 
     filasDescartadas_ = 0;
 
@@ -308,9 +305,15 @@ bool LectorCSV::cargarLista(ListaDEnlazada<Parque*> &lista, const std::string& r
 
         codigoParque = std::stoi(extraerCampo(linea, 0));
         nombreParque = extraerCampo(linea, 1);
-        Parque *aInsertar = new Parque(codigoParque, nombreParque);
-        lista.insertaFinal(aInsertar);
+        Parque aInsertar = Parque(codigoParque, nombreParque);
 
+        for (int i = 0; i < numeroArboles_; ++i) {
+            if (arboles[i].getCodigoParque() == codigoParque) {
+                aInsertar.insertarArbol(arboles[i]);
+            }
+        }
+
+        lista.insertaFinal(aInsertar);
     }
 
     numeroParques_ = lista.getTamLista();

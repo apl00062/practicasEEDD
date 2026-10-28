@@ -46,6 +46,8 @@ public:
     std::string getTipoPlanta() const;
     std::string getNombreComun() const ;
     Especie* getEspecie() const;
+    int getCodigoParque() const;
+    std::string getNombreCientifico() const;
 };
 
 
