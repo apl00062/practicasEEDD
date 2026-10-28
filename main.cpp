@@ -20,12 +20,12 @@ const std::string RUTA_FICHERO_ARBOLES = "data/arboladoMadrid.csv";
  * @return VDinámico de punteros a especies en el VDinámico completo
  *          que no tienen nombre común nulo
  */
-VDinamico<Especie*> getEspNComun(VDinamico<Especie>& vEspecies)
+VDinamico<Especie*> getEspNComun(VDinamico<Especie*>& vEspecies)
 {
     VDinamico<Especie*> vectorEspNComun;
     for ( int i = 0; i < vEspecies.getTamanioLogico(); ++i) {
-        if (vEspecies[i].getNombreComun() != "") {
-            vectorEspNComun.insertar(&vEspecies[i]);
+        if (vEspecies[i]->getNombreComun() != "") {
+            vectorEspNComun.insertar(vEspecies[i]);
         }
     }
     return vectorEspNComun;
@@ -118,34 +118,28 @@ int main()
     {
         //INSTANCIAR Y MOSTRAR EL VECTOR DE Especies
         LectorCSV lector_csv;
-        VDinamico<Especie> vectorCompletoPr1;
-        VDinamico<Especie> vectorCompleto;
-        ListaDEnlazada<int> enteros;
-        ListaDEnlazada<Parque> listaParques;
-        AVL<Arbol> arbolArboles;
-        Especie especie;
+        VDinamico<Especie*> especies;
+        ListaDEnlazada<Parque*> parques;
+        AVL<Arbol*> arboles;
 
 
-        if (!lector_csv.cargarVector(vectorCompletoPr1, RUTA_FICHERO_ESPECIES) ||
-            !lector_csv.cargarLista(listaParques, RUTA_FICHERO_PARQUES) ||
-            !lector_csv.cargarVector(vectorCompleto, RUTA_FICHERO_ESPECIES) ||
-            !lector_csv.cargarArbol(arbolArboles, RUTA_FICHERO_ARBOLES))
+        if (!lector_csv.cargarLista(parques, RUTA_FICHERO_PARQUES) ||
+            !lector_csv.cargarVector(especies, RUTA_FICHERO_ESPECIES) ||
+            !lector_csv.cargarArbol(arboles, RUTA_FICHERO_ARBOLES))
         {
             std::cerr << "Error: no se pudo abrir el fichero '" << RUTA_FICHERO_ESPECIES << "'.\n";
             std::cerr << "Comprueba que ejecutas el programa desde la raiz del proyecto "
                          "(o revisa el Working Directory en la configuracion de ejecucion).\n";
             return 1;
         }
-        std::cout << "Vector leido de fichero"<< std::endl;
-        std::cout << "Lista leida de fichero" << std::endl;
+        std::cout << "Numero de Especies cargados: " << especies.getTamanioLogico() << std::endl
+                  << "Numero de Parques cargados: " << parques.getTamLista() << std::endl
+                  << "Numero de Arboles cargados: "  << arboles.getNumElementos() << std::endl
+                  << "Altura del árbol AVL: " << arboles.getAltura() << std::endl;
 
 
-        VDinamico<Especie*> vectorEspNComun = getEspNComun(vectorCompletoPr1);
-
-        vectorCompleto.ordenar();
-
-        ControlParques controlParques(vectorCompleto, listaParques);
-
+        ControlParques controlParques(especies, parques, arboles);
+/**
         int menuPrincipal = 0;
 
         while (menuPrincipal < 4) {
@@ -177,7 +171,7 @@ int main()
                                 std::cout << "Identificador de las primeras 50 especies" << std::endl;
                                 for (int i = 0; i < 50; ++i)
                                 {
-                                    std::cout<<std::to_string(i+1)<<": "<<vectorCompletoPr1[i].getCodigoEspecie()<<std::endl;
+                                    std::cout<<std::to_string(i+1)<<": "<<vectorCompletoPr1[i]->getCodigoEspecie()<<std::endl;
                                 }
                                 break;
 
@@ -189,12 +183,12 @@ int main()
                                 for (int i = 0; i < 50; i++)
                                 {
                                     std::cout<< std::to_string(i+1) << " ";
-                                    vectorCompletoPr1[i].mostrarInfo();
+                                    vectorCompletoPr1[i]->mostrarInfo();
                                 }
                                 break;
 
                             case(3):
-                                //Busqueda de posición de codigos de especies
+                                /**Busqueda de posición de codigos de especies
                                 std::cout<<"==================================================="<< std::endl;
                                 std::cout << "Posición de códigos de especies: " << std::endl;
                                 int posicion;
@@ -209,6 +203,7 @@ int main()
                                 std::cout << "   Posicion de NDOF : " << posicion << std::endl;
                                 posicion = vectorCompletoPr1.busquedaDicotomica(Especie("JAX", "","",""));
                                 std::cout << "   Posicion de JAX: " << posicion << std::endl;
+
                                 break;
 
                             case(4):
@@ -330,7 +325,7 @@ int main()
                                     std::cout << "=== Prueba 5. Parques que contienen Abetos ===" << std::endl;
                                     std::cout << controlParques.contarEspecieParque("Abeto") << std::endl;
                                     break;
-                                    **/
+
                         }
                         break;
 
@@ -344,11 +339,15 @@ int main()
                     }
                 }
             }
+            */
+
+
     }
     catch (const std::exception& e)
     {
         std::cerr << std::endl << "main.cpp -> " << e.what() << std::endl;
         return 1;
     }
+
     return 0;
 }

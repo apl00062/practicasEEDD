@@ -4,6 +4,7 @@
 
 
 #include <stdexcept>
+#include <type_traits>
 #include "Operadores/Iterador.h"
 
 template<typename T>
@@ -53,7 +54,7 @@ public:
      * \param dato
      *      Dato con el que crearemos el nodo.
     */
-    void insertaFinal(T& dato);
+    void insertaFinal(T &dato);
 
     /**
      * Metodo que crea e inserta un nuevo nodo en el lugar donde el iterador apunte. Este metodo, primero llama a
@@ -273,6 +274,9 @@ void ListaDEnlazada<T>::borraInicio() {
     if (cabecera == nullptr)
         throw std::out_of_range("La lista esta vacia.");
     if (cabecera == cola) {
+        if constexpr (std::is_pointer_v<T>)
+            delete cabecera->dato;
+
         delete cabecera;
         cabecera = nullptr;
         cola = nullptr;
@@ -280,6 +284,10 @@ void ListaDEnlazada<T>::borraInicio() {
     else {
         NodoListaDEnlazada<T> *auxiliar = cabecera->siguiente;
         auxiliar->anterior = nullptr;
+
+        if constexpr (std::is_pointer_v<T>)
+            delete cabecera->dato;
+
         delete cabecera;
         cabecera = auxiliar;
         auxiliar = nullptr;
@@ -305,7 +313,12 @@ void ListaDEnlazada<T>::borrar(Iterador<T> &iterador) {
         NodoListaDEnlazada<T> *aBorrar = iterador.nodo;
         aBorrar->anterior->siguiente = aBorrar->siguiente;
         aBorrar->siguiente->anterior = aBorrar->anterior;
+
+        if constexpr (std::is_pointer_v<T>)
+            delete aBorrar->dato;
+
         delete aBorrar;
+
         --nElementos;
     }
     iterador.nodo = siguienteIterador;
@@ -316,6 +329,10 @@ void ListaDEnlazada<T>::borraFinal() {
     if (cabecera == nullptr)
         throw std::out_of_range("La lista esta vacia.");
     if (cabecera == cola) {
+
+        if constexpr (std::is_pointer_v<T>)
+            delete cola->dato;
+
         delete cola;
         cabecera = nullptr;
         cola = nullptr;
@@ -323,6 +340,10 @@ void ListaDEnlazada<T>::borraFinal() {
     else {
         NodoListaDEnlazada<T> *auxiliar = cola->anterior;
         auxiliar->siguiente = nullptr;
+
+        if constexpr (std::is_pointer_v<T>)
+            delete cola->dato;
+
         delete cola;
         cola = auxiliar;
     }

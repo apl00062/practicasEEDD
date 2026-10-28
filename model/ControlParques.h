@@ -13,14 +13,14 @@
 #include "Parque.h"
 
 class ControlParques {
-    VDinamico<Especie>* especies;
-    ListaDEnlazada<Parque>* parques;
-    AVL<Arbol>* arboles;
+    VDinamico<Especie*>* especies;
+    ListaDEnlazada<Parque*>* parques;
+    AVL<Arbol*>* arboles;
 
 public:
     /// Constructores: Por defecto y Parametrizado
     ControlParques();
-    ControlParques(VDinamico<Especie> &especie, ListaDEnlazada<Parque> &parques, AVL<Arbol> &arboles);
+    ControlParques(VDinamico<Especie*> &especie, ListaDEnlazada<Parque*> &parques, AVL<Arbol*> &arboles);
 
     /// Getters y Setters
     unsigned int getTamEspecies () { return especies->getTamanioLogico(); }

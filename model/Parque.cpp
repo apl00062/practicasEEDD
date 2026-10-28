@@ -95,9 +95,9 @@ int Parque::contarTiposPlantas() {
     VDinamico<std::string> plantas;
     for (int i = 0; i < this->arboles.getTamanioLogico(); ++i) {
         for (int j = 0; j < plantas.getTamanioLogico(); ++j) {
-            if (this->arboles[i].getTipoEspecie() != plantas[j]) {
+            if (this->arboles[i].getTipoPlanta() != plantas[j]) {
                 contador++;
-                plantas.insertar(this->arboles[i].getTipoEspecie());
+                plantas.insertar(this->arboles[i].getTipoPlanta());
             }
         }
     }

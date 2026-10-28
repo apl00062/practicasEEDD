@@ -39,6 +39,7 @@ public:
     std::string getAssetNum() const;
 
     bool operator<(const Arbol& original) const;
+    bool operator==(const Arbol& original) const;
 
     /// Getters provenientes del puntero a especie
     std::string getCodigoEspecie() const;

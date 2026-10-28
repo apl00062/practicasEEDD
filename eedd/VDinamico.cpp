@@ -73,6 +73,12 @@ template<typename T>
 VDinamico<T>::~VDinamico() {
     this->tamLogico = 0;
     this->tamFisico = 0;
+    if constexpr (std::is_pointer_v<T>)
+    {
+        for (int i = 0; i < this->tamLogico; ++i)
+            delete this->vector[i];
+    }
+
     delete [] this->vector;
 }
 
@@ -167,6 +173,10 @@ T& VDinamico<T>::eliminar(unsigned int posicion) {
 
     for (unsigned int i = posicion; i < this->tamLogico - 1; ++i)
         this->vector[i] = this->vector[i+1];
+
+
+    if constexpr (std::is_pointer_v<T>)
+        delete this[posicion];
 
     --this->tamLogico;
 

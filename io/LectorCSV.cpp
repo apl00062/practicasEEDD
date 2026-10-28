@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <algorithm>
 #include "../model/Especie.h"
 
 /**
@@ -15,7 +16,7 @@
  * @param rutaFichero Ruta del fichero CSV a leer.
  * @return true si el fichero se ha podido abrir, false en caso contrario.
  */
-bool LectorCSV::cargarVector(VDinamico<Especie> &vector, const std::string& rutaFichero) {
+bool LectorCSV::cargarVector(VDinamico<Especie*> &vector, const std::string& rutaFichero) {
 
     filasDescartadas_ = 0;
 
@@ -46,7 +47,9 @@ bool LectorCSV::cargarVector(VDinamico<Especie> &vector, const std::string& ruta
         nombreComun = extraerCampo(linea, 1);
         nombreCientifico = extraerCampo(linea, 2);
         tipoPlanta = extraerCampo(linea, 3);
-        vector.insertar(Especie(codigo, nombreComun, nombreCientifico,tipoPlanta));
+        Especie *aInsertar = new Especie(codigo,nombreComun,nombreCientifico,tipoPlanta);
+        vector.insertar(aInsertar);
+        vectorEspecie.insertar(aInsertar);
 
     }
 
@@ -54,7 +57,7 @@ bool LectorCSV::cargarVector(VDinamico<Especie> &vector, const std::string& ruta
     return true;
 }
 
-bool LectorCSV::cargarArbol(AVL<Arbol> &arbol, const std::string& rutaFichero) {
+bool LectorCSV::cargarArbol(AVL<Arbol*> &arbol, const std::string& rutaFichero) {
 
     filasDescartadas_ = 0;
 
@@ -70,44 +73,70 @@ bool LectorCSV::cargarArbol(AVL<Arbol> &arbol, const std::string& rutaFichero) {
 
     //Declaradas fuera del bucle por eficiencia
     std::string assetnum, numParque, numDistrito, nombDistrito, numBarrio, nombBarrio;
-    std::string x, y, codEspecie,especie, perimetro, alturaTotal;
+    std::string x, y, codEspecie, perimetro, alturaTotal;
 
+    int contador = 0;
     while (std::getline(fichero, linea)) {
+
+        if (!linea.empty() && linea.back() == '\r') {
+            linea.pop_back();
+        }
+
         if (linea.empty()) {
             continue;
         }
 
-        if (contarCampos(linea) != 12) {
+        if (contarCamposArbol(linea) != 12) {
+
             ++filasDescartadas_;
             continue;
         }
 
 
-        assetnum = extraerCampo(linea, 0);
-        numParque = extraerCampo(linea, 1);
-        numDistrito = extraerCampo(linea, 2);
-        nombDistrito = extraerCampo(linea, 3);
-        numBarrio = extraerCampo(linea, 4);
-        nombBarrio = extraerCampo(linea, 5);
-        x = extraerCampo(linea, 6);
-        y = extraerCampo(linea, 7);
-        codEspecie = extraerCampo(linea, 8);
-        especie = extraerCampo(linea, 9);
-        perimetro = extraerCampo(linea, 10);
-        alturaTotal = extraerCampo(linea, 11);
+        assetnum = extraerCampoArbol(linea, 0);
+        numParque = extraerCampoArbol(linea, 1);
+        int nParque = std::stoi(numParque);
+        numDistrito = extraerCampoArbol(linea, 2);
+        int nDistrito = std::stoi(numDistrito);
 
-        Arbol *aInsertar = new Arbol(assetnum, std::stoi(numParque),std::stoi(numDistrito),
-            nombDistrito, std::stoi(numBarrio),nombBarrio,std::stod(x),std::stod(y),
-            std::stof(perimetro),std::stof(alturaTotal));
-        for (int i = 0; i <)
+        nombDistrito = extraerCampoArbol(linea, 3);
+        numBarrio = extraerCampoArbol(linea, 4);
+        int nBarrio = std::stoi(numBarrio);
+        nombBarrio = extraerCampoArbol(linea, 5);
+        x = extraerCampoArbol(linea, 6);
+        double fx = std::stod(x);
+        y = extraerCampoArbol(linea, 7);
+        double fy = std::stod(y);
+        codEspecie = extraerCampoArbol(linea, 8);
+        perimetro = extraerCampoArbol(linea, 10);
+        alturaTotal = extraerCampoArbol(linea, 11);
 
+        if (perimetro.empty() || alturaTotal.empty()) {
+            ++filasDescartadas_;
+            continue;
+        }
+
+        std::replace(perimetro.begin(), perimetro.end(), ',', '.');
+        std::replace(alturaTotal.begin(), alturaTotal.end(), ',', '.');
+
+        float perim = std::stof(perimetro);
+        float altura = std::stof(alturaTotal);
+
+        Arbol *aInsertar = new Arbol(assetnum, nParque,nDistrito,nombDistrito, nBarrio,
+            nombBarrio,fx,fy,perim,altura);
+        for (int i = 0; i < numeroEspecies(); ++i)
+        {
+            if (vectorEspecie[i]->getCodigoEspecie() == codEspecie)
+            {
+                aInsertar->setEspecie(vectorEspecie[i]);
+                break;
+            }
+        }
+        arbol.inserta(aInsertar);
+        ++contador;
     }
 
-
-
-
-
-
+    std::cout << contador << std::endl;
     numeroArboles_= arbol.getNumElementos();
     return true;
 }
@@ -249,7 +278,7 @@ void LectorCSV::mostrarEspecie(const Especie& especie) {
 }
 
 
-bool LectorCSV::cargarLista(ListaDEnlazada<Parque> &lista, const std::string& rutaFichero) {
+bool LectorCSV::cargarLista(ListaDEnlazada<Parque*> &lista, const std::string& rutaFichero) {
 
     filasDescartadas_ = 0;
 
@@ -279,7 +308,7 @@ bool LectorCSV::cargarLista(ListaDEnlazada<Parque> &lista, const std::string& ru
 
         codigoParque = std::stoi(extraerCampo(linea, 0));
         nombreParque = extraerCampo(linea, 1);
-        Parque aInsertar(codigoParque, nombreParque);
+        Parque *aInsertar = new Parque(codigoParque, nombreParque);
         lista.insertaFinal(aInsertar);
 
     }
@@ -290,4 +319,83 @@ bool LectorCSV::cargarLista(ListaDEnlazada<Parque> &lista, const std::string& ru
 
 std::size_t LectorCSV::numeroParques() const {
     return numeroParques_;
+}
+
+std::size_t LectorCSV::contarCamposArbol(const std::string& linea) {
+    std::size_t numCampos = 1;
+    bool dentroComillas = false;
+    const std::size_t n = linea.size();
+
+    for (std::size_t i = 0; i < n; ) {
+        const char c = linea[i];
+
+        if (dentroComillas) {
+            if (c == '"') {
+                if (i + 1 < n && linea[i + 1] == '"') {
+                    i += 2;
+                } else {
+                    dentroComillas = false;
+                    ++i;
+                }
+            } else {
+                ++i;
+            }
+        } else if (c == '"') {
+            dentroComillas = true;
+            ++i;
+        } else if (c == ';') {
+            ++numCampos;
+            ++i;
+        } else {
+            ++i;
+        }
+    }
+
+    return numCampos;
+}
+
+std::string LectorCSV::extraerCampoArbol(const std::string& linea, std::size_t indiceObjetivo) {
+    std::string campo;
+    std::size_t indiceActual = 0;
+    bool dentroComillas = false;
+    const std::size_t n = linea.size();
+
+    for (std::size_t i = 0; i < n; ) {
+        const char c = linea[i];
+
+        if (dentroComillas) {
+            if (c == '"') {
+                if (i + 1 < n && linea[i + 1] == '"') {
+                    if (indiceActual == indiceObjetivo) {
+                        campo += '"';
+                    }
+                    i += 2;
+                } else {
+                    dentroComillas = false;
+                    ++i;
+                }
+            } else {
+                if (indiceActual == indiceObjetivo) {
+                    campo += c;
+                }
+                ++i;
+            }
+        } else if (c == '"') {
+            dentroComillas = true;
+            ++i;
+        } else if (c == ';') {
+            if (indiceActual == indiceObjetivo) {
+                return campo;
+            }
+            ++indiceActual;
+            ++i;
+        } else {
+            if (indiceActual == indiceObjetivo) {
+                campo += c;
+            }
+            ++i;
+        }
+    }
+
+    return campo;
 }

@@ -66,6 +66,13 @@ bool Arbol::operator<(const Arbol &original) const {
     return false;
 }
 
+bool Arbol::operator==(const Arbol &original) const
+{
+    if (this->assetNum == original.getAssetNum())
+        return true;
+    return false;
+}
+
 std::string Arbol::getCodigoEspecie() const{
     return especie->getCodigoEspecie();
 }

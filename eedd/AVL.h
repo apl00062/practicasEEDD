@@ -17,8 +17,8 @@ class AVL {
     void rotacionDerecha(NodoAVL<T>* &nodo);
     void rotacionIzquierda(NodoAVL<T>* &nodo);
 
-    void inordenAux(NodoAVL<T>* nodo, VDinamico<T*> &vector);
-    VDinamico<T*> inorden(NodoAVL<T>* nodo);
+    void inordenAux(NodoAVL<T>* nodo, VDinamico<T> &vector);
+    VDinamico<T> inorden(NodoAVL<T>* nodo);
     void preordenAux(NodoAVL<T>* nodo, VDinamico<NodoAVL<T>*> &vector);
     VDinamico<NodoAVL<T> *> preorden(NodoAVL<T>* nodo);
     void postordenAux(NodoAVL<T>* nodo, VDinamico<NodoAVL<T>*> &vector);
@@ -44,11 +44,11 @@ public:
     AVL &operator=(const AVL &original);
 
     /// Recorridos: Inorden, preorden y postorden.
-    VDinamico<T*> inorden() { return inorden(raiz); }
+    VDinamico<T> inorden() { return inorden(raiz); }
     VDinamico<NodoAVL<T> *> preorden() { return preorden(raiz); }
     VDinamico<NodoAVL<T> *> postorden() { return postorden(raiz); }
 
-    bool inserta(T& dato) {return inserta(raiz, dato); }
+    bool inserta(T &dato) {return inserta(raiz, dato); }
 
     T* busquedaRecursiva(T &dato) { return busquedaRecursiva(dato,raiz); }
     T* busquedaIterativa(T &dato) { return busquedaIterativa(dato,raiz); };
@@ -63,6 +63,9 @@ AVL<T>::~AVL()
     vector = postorden();
     for (int i = 0; i < vector.getTamanioLogico(); ++i)
     {
+        if constexpr (std::is_pointer_v<T>)
+            delete vector[i]->dato;
+
         delete vector[i];
     }
 }
@@ -102,19 +105,19 @@ AVL<T>& AVL<T>::operator=(const AVL<T>& original)
 }
 
 template<typename T>
-void AVL<T>::inordenAux(NodoAVL<T> *nodo, VDinamico<T*> &vector){
+void AVL<T>::inordenAux(NodoAVL<T> *nodo, VDinamico<T> &vector){
     if (nodo)
     {
         inordenAux(nodo->izquierda, vector);
-        vector.insertar(&nodo->dato);
+        vector.insertar(nodo->dato);
         inordenAux(nodo->derecha, vector);
     }
 }
 
 template <typename T>
-VDinamico<T*> AVL<T>::inorden(NodoAVL<T>* nodo)
+VDinamico<T> AVL<T>::inorden(NodoAVL<T>* nodo)
 {
-    VDinamico<T*> vector;
+    VDinamico<T> vector;
     inordenAux(nodo, vector);
     return vector;
 }
@@ -162,16 +165,16 @@ bool AVL<T>::inserta(NodoAVL<T> *&nodo, T &dato) {
     if (!nodo) {
         NodoAVL<T> *nuevoNodo = new NodoAVL<T>(dato);
         nodo = nuevoNodo;
+        ++nElementos;
         return true;
     }
 
-    if (nodo->dato == dato)
+    if (*nodo->dato == *dato)
         return false;
 
-    if (dato < nodo->dato) {
+    if (*dato < *nodo->dato) {
         insertado = inserta(nodo->izquierda, dato);
-    }
-    if (dato > nodo->dato) {
+    } else {
         insertado = inserta(nodo->derecha, dato);
     }
 
@@ -200,7 +203,6 @@ bool AVL<T>::inserta(NodoAVL<T> *&nodo, T &dato) {
                 rotacionIzquierda(nodo);
             }
         }
-        ++nElementos;
     }
     return insertado;
 }
@@ -223,6 +225,10 @@ void AVL<T>::rotacionIzquierda(NodoAVL<T> *&nodo) {
 
     if (auxiliar->balanceado > 0)
         auxiliar2->balanceado += auxiliar->balanceado;
+
+    const int izqAux = auxiliar->izquierda == nullptr ? -1 : auxiliar->izquierda->altura;
+    const int dchaAux = auxiliar->derecha == nullptr ? -1 : auxiliar->derecha->altura;
+    auxiliar->altura = 1 + std::max(izqAux, dchaAux);
 
     const int izq = nodo->izquierda == nullptr ? -1 : nodo->izquierda->altura;
     const int dcha = nodo->derecha == nullptr ? -1 : nodo->derecha->altura;
@@ -247,6 +253,10 @@ void AVL<T>::rotacionDerecha(NodoAVL<T> *&nodo) {
 
     if (auxiliar->balanceado < 0)
         auxiliar2->balanceado += auxiliar->balanceado;
+
+    const int izqAux = auxiliar->izquierda == nullptr ? -1 : auxiliar->izquierda->altura;
+    const int dchaAux = auxiliar->derecha == nullptr ? -1 : auxiliar->derecha->altura;
+    auxiliar->altura = 1 + std::max(izqAux, dchaAux);
 
     const int izq = nodo->izquierda == nullptr ? -1 : nodo->izquierda->altura;
     const int dcha = nodo->derecha == nullptr ? -1 : nodo->derecha->altura;
