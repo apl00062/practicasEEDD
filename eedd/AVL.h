@@ -17,8 +17,8 @@ class AVL {
     void rotacionDerecha(NodoAVL<T>* &nodo);
     void rotacionIzquierda(NodoAVL<T>* &nodo);
 
-    void inordenAux(NodoAVL<T>* nodo, VDinamico<T> &vector);
-    VDinamico<T> inorden(NodoAVL<T>* nodo);
+    void inordenAux(NodoAVL<T>* nodo, VDinamico<T*> &vector);
+    VDinamico<T*> inorden(NodoAVL<T>* nodo);
     void preordenAux(NodoAVL<T>* nodo, VDinamico<NodoAVL<T>*> &vector);
     VDinamico<NodoAVL<T> *> preorden(NodoAVL<T>* nodo);
     void postordenAux(NodoAVL<T>* nodo, VDinamico<NodoAVL<T>*> &vector);
@@ -44,7 +44,7 @@ public:
     AVL &operator=(const AVL &original);
 
     /// Recorridos: Inorden, preorden y postorden.
-    VDinamico<T> inorden() { return inorden(raiz); }
+    VDinamico<T*> inorden() { return inorden(raiz); }
     VDinamico<NodoAVL<T> *> preorden() { return preorden(raiz); }
     VDinamico<NodoAVL<T> *> postorden() { return postorden(raiz); }
 
@@ -108,19 +108,20 @@ AVL<T>& AVL<T>::operator=(const AVL<T>& original)
 }
 
 template<typename T>
-void AVL<T>::inordenAux(NodoAVL<T> *nodo, VDinamico<T> &vector){
+void AVL<T>::inordenAux(NodoAVL<T> *nodo, VDinamico<T*> &vector){
     if (nodo)
     {
         inordenAux(nodo->izquierda, vector);
-        vector.insertar(nodo->dato);
+        T* referencia = &nodo->dato;
+        vector.insertar(referencia);
         inordenAux(nodo->derecha, vector);
     }
 }
 
 template <typename T>
-VDinamico<T> AVL<T>::inorden(NodoAVL<T>* nodo)
+VDinamico<T*> AVL<T>::inorden(NodoAVL<T>* nodo)
 {
-    VDinamico<T> vector;
+    VDinamico<T*> vector;
     inordenAux(nodo, vector);
     return vector;
 }

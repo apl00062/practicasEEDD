@@ -275,7 +275,7 @@ void LectorCSV::mostrarEspecie(const Especie& especie) {
 }
 
 
-bool LectorCSV::cargarLista(ListaDEnlazada<Parque> &lista, const std::string& rutaFichero, VDinamico<Arbol> &arboles) {
+bool LectorCSV::cargarLista(ListaDEnlazada<Parque> &lista, const std::string& rutaFichero, VDinamico<Arbol*> &arboles) {
 
     filasDescartadas_ = 0;
 
@@ -307,8 +307,8 @@ bool LectorCSV::cargarLista(ListaDEnlazada<Parque> &lista, const std::string& ru
         nombreParque = extraerCampo(linea, 1);
         Parque aInsertar = Parque(codigoParque, nombreParque);
 
-        for (int i = 0; i < numeroArboles_; ++i) {
-            if (arboles[i].getCodigoParque() == codigoParque) {
+        for (int i = 0; i < arboles.getTamanioLogico(); ++i) {
+            if (arboles[i]->getCodigoParque() == codigoParque) {
                 aInsertar.insertarArbol(arboles[i]);
             }
         }

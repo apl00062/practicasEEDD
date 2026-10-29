@@ -22,7 +22,7 @@
 class LectorCSV {
 public:
     bool cargarVector(VDinamico<Especie> &vector, const std::string& rutaFichero);
-    bool cargarLista(ListaDEnlazada<Parque> &lista, const std::string& rutaFichero, VDinamico<Arbol> &arboles);
+    bool cargarLista(ListaDEnlazada<Parque> &lista, const std::string& rutaFichero, VDinamico<Arbol*> &arboles);
     bool cargarArbol(AVL<Arbol> &arbol, const std::string& rutaFichero, VDinamico<Especie> &especies);
 
     std::size_t numeroEspecies() const;

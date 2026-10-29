@@ -25,6 +25,11 @@ Arbol::Arbol(const std::string& assetNum, int numParque, int numDistrito, const 
     this->especie = nullptr;
 }
 
+Arbol::Arbol(const std::string& assetNum)
+{
+    this->assetNum = assetNum;
+}
+
 Arbol::Arbol(const Arbol& original) {
     this->assetNum = original.assetNum;
     this->numParque = original.numParque;
@@ -57,6 +62,16 @@ float Arbol::getAltura() const {
 std::string Arbol::getAssetNum() const
 {
     return this->assetNum;
+}
+
+int Arbol::getNumParque() const
+{
+    return this->numParque;
+}
+
+std::string Arbol::getNombreDistrito() const
+{
+    return this->nombreDistrito;
 }
 
 bool Arbol::operator<(const Arbol &original) const {

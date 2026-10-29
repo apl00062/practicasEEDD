@@ -17,14 +17,14 @@ ControlParques::ControlParques(LectorCSV &lector_csv) {
     if (!lector_csv.cargarArbol(arboles, RUTA_FICHERO_ARBOLES, especies))
         throw std::invalid_argument("Ha ocurrido un problema con la cargar de Arboles.");
 
-    VDinamico<Arbol> arboleh = arboles.inorden();
+    VDinamico<Arbol*> arboleh = arboles.inorden();
     if (!lector_csv.cargarLista(parques, RUTA_FICHERO_PARQUES, arboleh))
         throw std::invalid_argument("Ha ocurrido un problema con la carga de Parques.");
 
 
 }
 
-Parque* ControlParques::getParque(const unsigned int id) const {
+Parque* ControlParques::getParque(const unsigned int id) {
     Iterador<Parque> iterador(parques.getIterador());
     while (iterador.haySiguiente()) {
         if (iterador.dato().getCodigoParque() == id) {
@@ -47,7 +47,7 @@ Especie* ControlParques::getEspecie(unsigned int posicion) {
     return toRet;
 }
 
-int ControlParques::contarEspecieParque(const std::string& nombreComun) const {
+int ControlParques::contarEspecieParque(const std::string& nombreComun) {
     int contador = 0;
     Iterador<Parque> iterador = parques.getIterador();
     while (iterador.haySiguiente()) {
@@ -62,19 +62,19 @@ int ControlParques::contarEspecieParque(const std::string& nombreComun) const {
     return contador;
 }
 
-VDinamico<Especie*> ControlParques::listadoEspecieSubNombre(const std::string& subCadena) const {
+VDinamico<Especie*> ControlParques::listadoEspecieSubNombre(const std::string& subCadena)  {
     VDinamico<Especie*> listado;
-    for (int i = 0; i < especies->getTamanioLogico(); ++i) {
-        if ((*especies)[i].getNombreCientfico().find(subCadena) != std::string::npos) {
-            Especie* aInsertar = &(*especies)[i];
+    for (int i = 0; i < especies.getTamanioLogico(); ++i) {
+        if (especies[i].getNombreCientfico().find(subCadena) != std::string::npos) {
+            Especie* aInsertar = &especies[i];
             listado.insertar(aInsertar);
         }
     }
     return listado;
 }
 
-Parque *ControlParques::buscarParque(const std::string& nombreParque) const {
-    Iterador<Parque> iterador = parques->getIterador();
+Parque *ControlParques::buscarParque(const std::string& nombreParque) {
+    Iterador<Parque> iterador = parques.getIterador();
     while (iterador.haySiguiente()) {
         if (iterador.dato().getNombreParque() == nombreParque)
             return &iterador.dato();
@@ -83,44 +83,47 @@ Parque *ControlParques::buscarParque(const std::string& nombreParque) const {
     return nullptr;
 }
 
-Arbol* ControlParques::buscarArbol(const std::string& asNum) const {
-    VDinamico<Arbol> buscar = arboles->inorden();
-    for (int i = 0; i < buscar.getTamanioLogico(); ++i) {
-        if (buscar[i].getAssetNum() == asNum)
-            return &buscar[i];
-    }
-    return nullptr;
+Arbol* ControlParques::buscarArbol(const std::string& asNum) {
+    Arbol buscar = Arbol(asNum);
+    Arbol* toRet = arboles.busquedaIterativa(buscar);
+    return toRet;
 }
 
-VDinamico<Arbol*> ControlParques::listadoArbolesParque(const std::string &nombreParque) const {
-    if (parques == nullptr)
+VDinamico<Arbol*> ControlParques::listadoArbolesParque(const std::string &nombreParque)  {
+    if (parques.getTamLista() == 0)
         throw std::invalid_argument("No hay parques en el sistema.");
 
-    Iterador<Parque> iterador = parques->getIterador();
+    Iterador<Parque> iterador = parques.getIterador();
     VDinamico<Arbol*> arboleh;
-    while (iterador.haySiguiente()) {
+    Parque* parque = nullptr;
+    while (iterador.haySiguiente())
+    {
         if (iterador.dato().getNombreParque() == nombreParque)
-            break;
+            parque = &iterador.dato();
         iterador.aSiguiente();
     }
-    if (iterador.dato().getNombreParque() != nombreParque)
-        return arboleh;
+    if (iterador.dato().getNombreParque() == nombreParque)
+        parque = &iterador.dato();
 
-    for (int i = 0; i < iterador.dato().getNArboles(); ++i) {
-        Arbol* aInsertar = iterador.dato().getArbol(i);
+
+    if (parque == nullptr)
+        throw std::invalid_argument("No existe el parque.");
+
+    for (int i = 0; i < parque->getNArboles(); ++i)
+    {
+        Arbol* aInsertar = parque->getArbol(i);
         arboleh.insertar(aInsertar);
     }
-
     return arboleh;
 }
 
-Arbol *ControlParques::arbolMasAlto() const {
-    if (parques == nullptr)
+Arbol *ControlParques::arbolMasAlto()  {
+    if (parques.getTamLista() == 0)
         throw std::invalid_argument("No hay parques en el sistema.");
 
     float altura = -1;
     Arbol *masAlto = nullptr;
-    Iterador<Parque> iterador = parques->getIterador();
+    Iterador<Parque> iterador = parques.getIterador();
     while (iterador.haySiguiente()) {
         if (iterador.dato().getArbolMasAlto()->getAltura() > altura) {
             altura = iterador.dato().getArbolMasAlto()->getAltura();
@@ -136,11 +139,11 @@ Arbol *ControlParques::arbolMasAlto() const {
     return masAlto;
 }
 
-int ControlParques::contarEspecies(const std::string &nombreParque) const {
-    if (parques == nullptr)
+int ControlParques::contarEspecies(const std::string &nombreParque) {
+    if (parques.getTamLista() == 0)
         throw std::invalid_argument("No hay parques en el sistema.");
 
-    Iterador<Parque> iterador = parques->getIterador();
+    Iterador<Parque> iterador = parques.getIterador();
     int contador = 0;
     while (iterador.haySiguiente())
     {
@@ -161,11 +164,11 @@ int ControlParques::contarEspecies(const std::string &nombreParque) const {
 
 }
 
-int ControlParques::contarTipos() const {
-    if (parques == nullptr)
+int ControlParques::contarTipos() {
+    if (parques.getTamLista() == 0)
         throw std::invalid_argument("No hay ningún parque en el sistema.");
 
-    Iterador<Parque> iterador = parques->getIterador();
+    Iterador<Parque> iterador = parques.getIterador();
     int contador = 0;
     VDinamico<std::string> especiesPresentes;
     std::string aInsertar = iterador.dato().getArbol(0)->getTipoPlanta();

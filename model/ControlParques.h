@@ -11,7 +11,6 @@
 #include "../io/LectorCSV.h"
 #include "Especie.h"
 
-#include "Parque.h"
 
 class ControlParques {
     VDinamico<Especie> especies;
@@ -24,8 +23,10 @@ public:
 
     /// Getters y Setters
     unsigned int getTamEspecies () { return especies.getTamanioLogico(); }
-    unsigned int getTamParques () { return parques.getTamLista(); }
-    Parque* getParque(unsigned int id) const;
+    unsigned int getTamParques () const { return parques.getTamLista(); }
+    unsigned int getTamArboles () const { return arboles.getNumElementos(); }
+    unsigned int getAlturaArbol () const { return arboles.getAltura(); }
+    Parque* getParque(unsigned int id);
     Especie* getEspecie(unsigned int posicion);
 
     /**
@@ -34,7 +35,7 @@ public:
     * \param nombreComun
     *       Nombre de la especie que queremos buscar.
     */
-    int contarEspecieParque(const std::string &nombreComun) const;
+    int contarEspecieParque(const std::string &nombreComun);
 
 
     /**
@@ -43,7 +44,7 @@ public:
      * \param subCadena
      *      Subcadena del nombre cientifico de una especie.
      */
-    VDinamico<Especie*> listadoEspecieSubNombre(const std::string &subCadena) const;
+    VDinamico<Especie*> listadoEspecieSubNombre(const std::string &subCadena);
 
 
     /**
@@ -52,13 +53,13 @@ public:
      * \param nombreParque
      *      Nombre del Parque que queremos buscar.
      */
-    Parque* buscarParque(const std::string& nombreParque) const;
+    Parque* buscarParque(const std::string& nombreParque);
 
-    Arbol* buscarArbol(const std::string& asNum) const;
-    VDinamico<Arbol*> listadoArbolesParque(const std::string& nombreParque) const;
-    Arbol* arbolMasAlto() const;
-    int contarEspecies(const std::string& nombreParque) const;
-    int contarTipos() const;
+    Arbol* buscarArbol(const std::string& asNum);
+    VDinamico<Arbol*> listadoArbolesParque(const std::string& nombreParque);
+    Arbol* arbolMasAlto();
+    int contarEspecies(const std::string& nombreParque);
+    int contarTipos();
 };
 
 

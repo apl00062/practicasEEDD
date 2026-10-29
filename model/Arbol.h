@@ -28,6 +28,7 @@ public:
     Arbol();
     Arbol(const std::string& assetNum, int numParque, int numDistrito, const std::string& nombreDistrito,
             int numBarrio, const std::string& nombreBarrio, double x, double y, float perimetro, float altura);
+    Arbol(const std::string& assetNum);
     Arbol(const Arbol& original);
 
     /// Destructor
@@ -37,6 +38,8 @@ public:
     void setEspecie(Especie *especie);
     float getAltura() const;
     std::string getAssetNum() const;
+    int getNumParque() const;
+    std::string getNombreDistrito() const;
 
     bool operator<(const Arbol& original) const;
     bool operator==(const Arbol& original) const;

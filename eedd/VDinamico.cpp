@@ -134,7 +134,7 @@ void VDinamico<T>::aumentarTamVector(const unsigned int tamLogic) {
 
 
 template<typename T>
-void VDinamico<T>::insertar(T &dato, unsigned int posicion) {
+void VDinamico<T>:: insertar(T &dato, unsigned int posicion) {
     if (posicion > this->tamLogico && posicion != UINT_MAX) {
         throw std::out_of_range("La posicion tiene que encontrarse dentro del tamanio logico");
     }

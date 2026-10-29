@@ -115,36 +115,22 @@ int main()
     try
     {
         //INSTANCIAR Y MOSTRAR EL VECTOR DE Especies
-        VDinamico<Especie> especies;
-        ListaDEnlazada<Parque> parques;
-        AVL<Arbol> arboles;
+        LectorCSV lector_csv;
+        ControlParques controlParques(lector_csv);
+
+        std::cout << "-- EJERCICIO Nº1 --" << std::endl
+                  << "Numero de Especies cargados: " << controlParques.getTamEspecies() << std::endl
+                  << "Numero de Parques cargados: " << controlParques.getTamParques() << std::endl
+                  << "Numero de Arboles cargados: "  << controlParques.getTamArboles() << std::endl
+                  << "Altura del árbol AVL: " << controlParques.getAlturaArbol() << std::endl << std::endl;
 
 
-        if (!lector_csv.cargarLista(parques, RUTA_FICHERO_PARQUES) ||
-            !lector_csv.cargarVector(especies, RUTA_FICHERO_ESPECIES) ||
-            !lector_csv.cargarArbol(arboles, RUTA_FICHERO_ARBOLES))
-        {
-            std::cerr << "Error: no se pudo abrir el fichero '" << RUTA_FICHERO_ESPECIES << "'.\n";
-            std::cerr << "Comprueba que ejecutas el programa desde la raiz del proyecto "
-                         "(o revisa el Working Directory en la configuracion de ejecucion).\n";
-            return 1;
-        }
-        std::cout << "-- EJERCICIO N1 --" << std::endl
-                  << "Numero de Especies cargados: " << especies.getTamanioLogico() << std::endl
-                  << "Numero de Parques cargados: " << parques.getTamLista() << std::endl
-                  << "Numero de Arboles cargados: "  << arboles.getNumElementos() << std::endl
-                  << "Altura del árbol AVL: " << arboles.getAltura() << std::endl << std::endl;
-
-        //arboles.busquedaIterativa("90");
-
-
-        ControlParques controlParques(especies, parques, arboles);
         Arbol* aMostrar1 = controlParques.buscarArbol("9850684");
         Arbol* aMostrar2 = controlParques.buscarArbol("5702331");
         Arbol* aMostrar3 = controlParques.buscarArbol("5697360");
         Arbol* aMostrar4 = controlParques.buscarArbol("0000000");
 
-        std::cout << "-- EJERCICIO N2 --" << std::endl;
+        std::cout << "-- EJERCICIO Nº2 --" << std::endl;
         if (aMostrar1 == nullptr)
             std::cout << "El arbol 9850684 no existe. " << std::endl;
         else {
@@ -153,7 +139,7 @@ int main()
                       << "Codigo del Parque: " << aMostrar1->getCodigoParque() << std::endl
                       << "Nombre común: " << aMostrar1->getNombreComun() << std::endl
                       << "Nombre científico: " << aMostrar1->getNombreCientifico() << std::endl
-                      << "Tipo de Planta: " << aMostrar1->getTipoPlanta() << std::endl;
+                      << "Tipo de Planta: " << aMostrar1->getTipoPlanta() << std::endl << std::endl;
         }
         if (aMostrar2 == nullptr)
             std::cout << "El arbol 5702331 no existe. " << std::endl;
@@ -163,7 +149,7 @@ int main()
                       << "Codigo del Parque: " << aMostrar2->getCodigoParque() << std::endl
                       << "Nombre común: " << aMostrar2->getNombreComun() << std::endl
                       << "Nombre científico: " << aMostrar2->getNombreCientifico() << std::endl
-                      << "Tipo de Planta: " << aMostrar2->getTipoPlanta() << std::endl;
+                      << "Tipo de Planta: " << aMostrar2->getTipoPlanta() << std::endl << std::endl;
         }
         if (aMostrar3 == nullptr)
             std::cout << "El arbol 5697360 no existe. " << std::endl;
@@ -173,17 +159,26 @@ int main()
                       << "Codigo del Parque: " << aMostrar3->getCodigoParque() << std::endl
                       << "Nombre común: " << aMostrar3->getNombreComun() << std::endl
                       << "Nombre científico: " << aMostrar3->getNombreCientifico() << std::endl
-                      << "Tipo de Planta: " << aMostrar3->getTipoPlanta() << std::endl;
+                      << "Tipo de Planta: " << aMostrar3->getTipoPlanta() << std::endl << std::endl;
         }
         if (aMostrar4 == nullptr)
-            std::cout << "El arbol 0000000 no existe. " << std::endl;
+            std::cout << "El arbol 0000000 no existe. " << std::endl << std::endl;
         else {
             std::cout << "El arbol 0000000 existe, y tiene los siguientes atributos: " << std::endl
                       << "Identificador: " << aMostrar4->getAssetNum() << std::endl
                       << "Codigo del Parque: " << aMostrar4->getCodigoParque() << std::endl
                       << "Nombre común: " << aMostrar4->getNombreComun() << std::endl
                       << "Nombre científico: " << aMostrar4->getNombreCientifico() << std::endl
-                      << "Tipo de Planta: " << aMostrar4->getTipoPlanta() << std::endl;
+                      << "Tipo de Planta: " << aMostrar4->getTipoPlanta() << std::endl << std::endl;
+        }
+
+        VDinamico<Arbol*> ejercicio3 = controlParques.listadoArbolesParque("JARDINES DEL BUEN RETIRO");
+        std::cout <<"-- Ejercicio Nº3 --" << std::endl;
+        for (int i = 0; i < 10; ++i)
+        {
+            std::cout << "Identificador del arbol n" << i+1 << ": " << ejercicio3[i]->getAssetNum() << std::endl;
+            std::cout << "Numero de Parque: " << ejercicio3[i]->getNumParque() << std::endl;
+            std::cout << "Nombre del Distrito: " << ejercicio3[i]->getNombreDistrito() << std::endl << std::endl;
         }
 /**
         int menuPrincipal = 0;
